@@ -1,0 +1,37 @@
+#treemap {
+    max-width: 100%;
+}
+
+.up {
+    background-color: green;
+    border: 1px solid black;
+    font-size: 100%;
+    line-height: 150%;
+    overflow: hidden;
+    
+    text-indent: 1%;
+    transition: background 1s;
+    transition: color 0.5s;
+}
+
+.up:hover {
+    background: grey !important;
+    color: white;
+}
+
+.down {
+    background-color: red;
+    border: 1px solid black;
+    font-size: 100%;
+    line-height: 150%;
+    overflow: hidden;
+    
+    text-indent: 1%;
+    transition: background 1s;
+    transition: color 0.5s;
+}
+
+.down:hover {
+    background: grey !important;
+    color: white;
+}
