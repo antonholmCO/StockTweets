@@ -1,4 +1,6 @@
 
+let big_data = {}
+
 $(document).ready(function () {
 
     $.ajax({
@@ -7,6 +9,7 @@ $(document).ready(function () {
     })
     .done(function (data) {
 
+        big_data = data
 
         // Sort and order by market cap
         let total_cap = 0
@@ -46,15 +49,51 @@ $(document).ready(function () {
             let symbol = ''
 
             // Sets class on element based on stockprice increased or decreased
-            if (sort_list[x].change > 0) {
-                symbol = 'up'
+            if (procent > 0) {
+                if(procent <=2) {
+                    symbol = 'up_2'
+                } else if (procent <= 5) {
+                    symbol = 'up_5'
+                } else {
+                    symbol = 'up_10'
+                }
+                    
             } else {
-                symbol = 'down'
+                if (procent >= -2) {
+                    symbol = 'down_2'
+                } else if (procent >= -5) {
+                    symbol = 'down_5'
+                } else {
+                    symbol = 'down_10'
+                }
+                
             }
 
             //Creates element and appends to treemap element
-            let text = `<div class="${symbol}" style="width:${width}%; height:${height}px;"><h3>${sort_list[x].name}</h3>$${sort_list[x].price}<strong><br>${procent}</strong>%<br><em>Size, width ${market_percentage}%</div>`
+            let text = `<div id="${sort_list[x].name}" class="${symbol}" style="width:${width}%; height:${height}px;" onmouseover="mouse_over(this.id)" onmouseout="mouse_out()"><h3 class="text-capitalize">${sort_list[x].name}</h3>$${sort_list[x].price}<strong><br>${procent}</strong>%<br><em>Size, width ${market_percentage}%</div>`
             $(text).appendTo("#treemap");
         }
     })
 });
+
+
+
+
+
+function mouse_over(element_id) {
+    let procent = (Math.round(big_data[element_id].usd_24h_change * 100) / 100).toFixed(2);
+    let new_element = `<div class="info-window"><h3 class="text-capitalize">${element_id}</h3> <p class="text-capitalize">Name: ${element_id}</p> <p>MarketCap: $${big_data[element_id].usd_market_cap}</p><p>Price: ${big_data[element_id].usd}</p><p>Change: ${procent}%</p></div>`
+
+    
+
+    let info_window = $('#' + element_id)
+    info_window.append(new_element);
+ 
+}
+
+function mouse_out() {
+    let info_window = $('.info-window')
+    info_window.remove();
+
+}
+
