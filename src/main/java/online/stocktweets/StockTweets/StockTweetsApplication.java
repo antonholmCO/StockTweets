@@ -1,4 +1,4 @@
-package online.stocktweets.StockTweets.controller;
+package online.stocktweets.StockTweets;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
