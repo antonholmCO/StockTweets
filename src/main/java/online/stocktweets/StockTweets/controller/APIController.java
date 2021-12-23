@@ -1,5 +1,6 @@
 package online.stocktweets.StockTweets.controller;
 
+import online.stocktweets.StockTweets.model.Stock;
 import online.stocktweets.StockTweets.model.Tweet;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -36,9 +37,13 @@ public class APIController {
 
 
 
-    @GetMapping("/tweet/{id}")
-    public int getDrink1(@PathVariable int id) {
-        return id;
+    @GetMapping("/stock/{name}")
+    public List getDrink1(@PathVariable String name) {
+        StockService ss = new StockService();
+        Stock stock = ss.getStock(name);
+        ArrayList <Stock> stocks = new ArrayList<>();
+        stocks.add(stock);
+        return stocks;
     }
 }
 

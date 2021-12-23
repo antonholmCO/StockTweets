@@ -10,11 +10,12 @@ public class Stock {
         return c;
     }
 
-    public String getName() {
+    public String getCompanyName() {
         return description;
     }
 
     public String getSymbol() {
         return symbol;
     }
+
 }
