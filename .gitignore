@@ -242,4 +242,8 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# File that stores all passwords and API keys
+PasswordsAndKeys.java
+PasswordsAndKeys.class
+
 # End of https://www.toptal.com/developers/gitignore/api/java,intellij,maven,macos,windows,linux
