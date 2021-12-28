@@ -18,4 +18,7 @@ public class Stock {
         return symbol;
     }
 
+    public void setSymbol(String symbol) {
+        this.symbol = symbol;
+    }
 }
