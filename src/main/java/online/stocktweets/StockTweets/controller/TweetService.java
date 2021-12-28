@@ -1,8 +1,8 @@
 package online.stocktweets.StockTweets.controller;
 
 import com.google.gson.*;
-import online.stocktweets.StockTweets.PasswordsAndKeys;
-import online.stocktweets.StockTweets.model.Tweet;
+import online.stocktweets.StockTweets.util.PasswordsAndKeys;
+import online.stocktweets.StockTweets.model.Tweets;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -14,7 +14,7 @@ public class TweetService {
     private HttpStatus responseCode;
 
 
-    public Tweet getTweets(String stockSymbol) {
+    public Tweets getTweets(String stockSymbol) {
         URI uri = createTweetQuery(stockSymbol);
         String bearerToken = "Bearer " + PasswordsAndKeys.bearerToken;
 
@@ -38,9 +38,9 @@ public class TweetService {
     }
 
 
-    private Tweet parseJSON(String json) {
+    private Tweets parseJSON(String json) {
         Gson gson = new Gson();
-        return gson.fromJson(json, Tweet.class);
+        return gson.fromJson(json, Tweets.class);
     }
 
 

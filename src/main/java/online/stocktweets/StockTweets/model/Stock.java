@@ -18,7 +18,9 @@ public class Stock {
     public String getSymbol() {
         return symbol;
     }
-
+    public void setSymbol(String symbol) {
+        this.symbol = symbol;
+    }
     public double getPriceSEK() {
         return calculateSEK(c);
     }
@@ -36,5 +38,4 @@ public class Stock {
         Stock stock2 = new Stock();
         System.out.println(stock2.calculateSEK(20));
     }
-
 }

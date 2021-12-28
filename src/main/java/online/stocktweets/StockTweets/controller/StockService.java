@@ -1,10 +1,8 @@
 package online.stocktweets.StockTweets.controller;
 
 import com.google.gson.*;
-import online.stocktweets.StockTweets.PasswordsAndKeys;
+import online.stocktweets.StockTweets.util.PasswordsAndKeys;
 import online.stocktweets.StockTweets.model.Stock;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
@@ -70,7 +68,9 @@ public class StockService {
         return uri;
     }
 
+    private class Task extends Thread {
 
+    }
     /*
     public Stock getStocks(Stock stock) {
         String json = "fel bror";
