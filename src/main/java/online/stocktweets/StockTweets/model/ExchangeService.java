@@ -3,6 +3,7 @@ package online.stocktweets.StockTweets.model;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import online.stocktweets.StockTweets.util.PasswordsAndKeys;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
@@ -12,11 +13,10 @@ public class ExchangeService {
     private RestTemplate restTemplate = new RestTemplate();
 
     public double getExchangeRate(String curr1, String curr2) {
-        String apikey = "c4faf0f36f193d15d2d59851";
 
         StringBuilder strb = new StringBuilder();
         strb.append("https://v6.exchangerate-api.com/v6/")
-                .append(apikey)
+                .append(PasswordsAndKeys.exchangeAPIKey)
                 .append("/pair/")
                 .append(curr1)
                 .append("/")
@@ -35,8 +35,6 @@ public class ExchangeService {
         JsonObject jsonObject = jsonElement.getAsJsonObject();
 
         double rate = jsonObject.get("conversion_rate").getAsDouble();
-
-        System.out.println("ex rate from api: " + rate);
 
         return rate;
     }

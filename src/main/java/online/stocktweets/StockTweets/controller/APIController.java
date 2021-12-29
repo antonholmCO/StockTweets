@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import online.stocktweets.StockTweets.util.Utils;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class APIController {
 
     @GetMapping("/tweets/{stockSymbol}")
     @ResponseBody
-    public List getTweets(@PathVariable String stockSymbol) {
+    public List getTweets(@PathVariable String stockSymbol, HttpServletResponse response) {
         TweetService ts = new TweetService();
 //        ArrayList<Tweet> tweets = ts.getTweetsFromTwitter("1228393702244134912,1227640996038684673,1199786642791452673");
         Tweets t2 = null;
@@ -46,6 +47,7 @@ public class APIController {
 
             return ar;
         }
+        response.setHeader("allow-control-allow-origin", "*");
 
         return t2.data;
     }

@@ -1,15 +1,14 @@
 package online.stocktweets.StockTweets.model;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 public class Stock {
     private String description;
     private String symbol;
     private double c;
 
 
-
-    public double getPriceUSD() {
-        return c;
-    }
 
     public String getCompanyName() {
         return description;
@@ -18,24 +17,32 @@ public class Stock {
     public String getSymbol() {
         return symbol;
     }
-    public void setSymbol(String symbol) {
-        this.symbol = symbol;
+
+    public double getPriceUSD() {
+        return c;
     }
     public double getPriceSEK() {
         return calculateSEK(c);
+    }
+
+    public void setSymbol(String symbol) {
+        this.symbol = symbol;
+    }
+
+    public void setPriceUSD(double c) {
+        this.c = c;
     }
 
     private double calculateSEK(double priceUSD) {
         double exchangeRate = ExchangeRate.getExchangeRateUSDToSEK();
         double sek = priceUSD * exchangeRate;
 
-        return sek;
-    }
+        BigDecimal bigDecimal = BigDecimal.valueOf(sek);
+        bigDecimal = bigDecimal.setScale(2, RoundingMode.HALF_UP);
 
-    public static void main(String[] args) {
-        Stock stock = new Stock();
-        System.out.println(stock.calculateSEK(100));
-        Stock stock2 = new Stock();
-        System.out.println(stock2.calculateSEK(20));
+        sek = bigDecimal.doubleValue();
+
+        return sek;
+
     }
 }

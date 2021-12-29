@@ -15,7 +15,7 @@ public class StockService {
 
     //Input can be company name or stock symbol
     public Stock getStock(String stock) {
-        URI uri = creatStockQuery(stock);
+        URI uri = createSymbolLookupQuery(stock);
 
         RestTemplate restTemplate = new RestTemplate();
         String json = restTemplate.getForObject(uri, String.class);
@@ -30,17 +30,29 @@ public class StockService {
         Stock stockObj = gson.fromJson(jsonArray.get(0), Stock.class);
 
 
-
+        updateStockWithPrice(stockObj);
 
         return stockObj;
     }
 
 
+    private void updateStockWithPrice(Stock stock) {
+        URI uri = createPriceQuery(stock.getSymbol());
+
+        RestTemplate restTemplate = new RestTemplate();
+        String json = restTemplate.getForObject(uri, String.class);
+
+        JsonElement jsonElement = JsonParser.parseString(json);
+        JsonObject jsonObject = jsonElement.getAsJsonObject();
+
+        double price = jsonObject.get("c").getAsDouble();
+        stock.setPriceUSD(price);
+    }
+
     //TODO javadoc
-    private URI creatStockQuery(String stockName) {
+    private URI createSymbolLookupQuery(String stockName) {
         StringBuilder strb = new StringBuilder();
         URI uri = null;
-        //https://finnhub.io/api/v1/search?q=apple&token=c70ab7qad3id7ammkm3g
         String strURI = strb.append("https://finnhub.io/api/v1/search?q=").append(stockName).append(PasswordsAndKeys.finnhubKey).toString();
 
         try {
@@ -53,10 +65,9 @@ public class StockService {
     }
 
     //TODO javadoc
-    public URI createStockQuery(String stockSymbol) {
+    public URI createPriceQuery(String stockSymbol) {
         StringBuilder strb = new StringBuilder();
         URI uri = null;
-        //https://finnhub.io/api/v1/quote?symbol=AAPL&token=c70ab7qad3id7ammkm3g
         String strURI = strb.append("https://finnhub.io/api/v1/quote?symbol=").append(stockSymbol).append(PasswordsAndKeys.finnhubKey).toString();
 
         try {
@@ -67,10 +78,7 @@ public class StockService {
 
         return uri;
     }
-
-    private class Task extends Thread {
-
-    }
+    
     /*
     public Stock getStocks(Stock stock) {
         String json = "fel bror";

@@ -2,23 +2,20 @@ package online.stocktweets.StockTweets.model;
 
 public class ExchangeRate {
     private static ExchangeService es = new ExchangeService();
-    private static int oneHourInMS = 3600000;
-    private static long timeSinceLastExchangeRate = -1;
-    private static long latestExchangeRateCall = 0;
-    private static double currentRate = 0.0;
-    private static int hours = 12;
+    private static int oneHourMillis = 3600000;
+    private static int hoursBetweenCalls = 12;
 
+    private static long lastExchangeRateCallMillis = 0;
+    private static double rate = 0.0;
 
     public static double getExchangeRateUSDToSEK() {
-        timeSinceLastExchangeRate = System.currentTimeMillis() - latestExchangeRateCall;
-        System.out.println("time since last exch check: " + timeSinceLastExchangeRate);
+        long timeSinceLastExchangeRateCall = System.currentTimeMillis() - lastExchangeRateCallMillis;
 
-        if (timeSinceLastExchangeRate > ((long) oneHourInMS * hours) ) {
-            currentRate = es.getExchangeRate("USD", "SEK");
-            latestExchangeRateCall = System.currentTimeMillis();
-        }
+            if (timeSinceLastExchangeRateCall > ((long) oneHourMillis * hoursBetweenCalls) ) {
+                rate = es.getExchangeRate("USD", "SEK");
+                lastExchangeRateCallMillis = System.currentTimeMillis();
+            }
 
-        System.out.println("currRate: " + currentRate);
-        return currentRate;
+            return rate;
     }
 }
