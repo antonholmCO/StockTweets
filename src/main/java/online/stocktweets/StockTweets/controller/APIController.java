@@ -47,7 +47,7 @@ public class APIController {
 
             return ar;
         }
-        response.setHeader("allow-control-allow-origin", "*");
+        response.setHeader("Access-Control-Allow-Origin", "*");
 
         return t2.data;
     }
