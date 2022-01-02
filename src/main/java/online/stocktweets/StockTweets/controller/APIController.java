@@ -1,8 +1,6 @@
 package online.stocktweets.StockTweets.controller;
 
-import online.stocktweets.StockTweets.model.Stock;
-import online.stocktweets.StockTweets.model.StockTweets;
-import online.stocktweets.StockTweets.model.Tweets;
+import online.stocktweets.StockTweets.model.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +13,7 @@ import java.util.List;
 @Controller
 @RequestMapping(path = "api/v1")
 public class APIController {
-
-    private ArrayList presetStockList = new ArrayList<>();
-
-
+    StockService ss = new StockService();
 
     @GetMapping("/")
     public String apiIndex() {
@@ -30,11 +25,21 @@ public class APIController {
         return "documentation.html";
     }
 
+
+    @GetMapping("/symbols/{industry}")
+    @ResponseBody
+    public List<?> getSymbols(@PathVariable String industry, HttpServletResponse response) {
+        ArrayList<Symbol> symbols = ss.getSymbolList(industry);
+
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        return symbols;
+    }
+
+
     @GetMapping("/tweets/{stockSymbol}")
     @ResponseBody
     public List getTweets(@PathVariable String stockSymbol, HttpServletResponse response) {
         TweetService ts = new TweetService();
-//        ArrayList<Tweet> tweets = ts.getTweetsFromTwitter("1228393702244134912,1227640996038684673,1199786642791452673");
         Tweets t2 = null;
         try {
             t2 = ts.getTweets(stockSymbol);
@@ -42,13 +47,12 @@ public class APIController {
         }
 
         if(t2 == null) {
-            ArrayList<String> ar = new ArrayList();
+            ArrayList<String> ar = new ArrayList<>();
             ar.add(HttpStatus.BAD_REQUEST.toString());
 
             return ar;
         }
         response.setHeader("Access-Control-Allow-Origin", "*");
-
         return t2.data;
     }
 
@@ -70,8 +74,8 @@ public class APIController {
 
         StockService ss = new StockService();
         TweetService ts = new TweetService();
-        ArrayList<String> stocklist = Utils.readFiles.readTxtFile("src/main/resources/topstocks.txt");
-        for (String s : stocklist){
+        ArrayList<String> stockList = Utils.readTxtFile("src/main/resources/presetSectors/techStockList.txt");
+        for (String s : stockList){
             Stock stock = ss.getStock(s);
             Tweets tweets = ts.getTweets(s);
             StockTweets st = new StockTweets(stock, tweets);
