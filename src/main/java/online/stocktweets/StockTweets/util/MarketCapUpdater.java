@@ -15,8 +15,35 @@ public class MarketCapUpdater {
     public void startTimer() {
         long delay = dayInMillis - (System.currentTimeMillis() % dayInMillis); //TODO Fixa till
         System.out.println(delay);
+
+        updateCapOnStart();
+
         timer.schedule(new SectorUpdater("tech"), delay, dayInMillis);
         timer.schedule(new SectorUpdater("medical"), delay+60000, dayInMillis);
+    }
+
+
+    private void updateCapOnStart() {
+        updateMarketCap("tech");
+        updateMarketCap("medical");
+    }
+
+    private void updateMarketCap(String sector) {
+        StockService ss = new StockService();
+
+        ArrayList<String> symbols = Utils.readTxtFile("src/main/resources/presetSectors/"+ sector +"StockList.txt");
+
+        ArrayList<String> marketCap = new ArrayList<>();
+
+
+        for (String symbol : symbols) {
+            long mc = ss.getMarketCap(symbol);
+            marketCap.add(Long.toString(mc));
+        }
+
+        Utils.writeTxtFile("src/main/resources/presetSectors/" + sector + "MarketCap.txt", marketCap);
+
+        System.out.println(sector + " updated: " + System.currentTimeMillis());
     }
 
     private class SectorUpdater extends TimerTask {
@@ -28,21 +55,7 @@ public class MarketCapUpdater {
 
         @Override
         public void run() {
-            StockService ss = new StockService();
-
-            ArrayList<String> symbols = Utils.readTxtFile("src/main/resources/presetSectors/"+ sector +"StockList.txt");
-
-            ArrayList<String> marketCap = new ArrayList<>();
-
-
-            for (String symbol : symbols) {
-                long mc = ss.getMarketCap(symbol);
-                marketCap.add(Long.toString(mc));
-            }
-
-            Utils.writeTxtFile("src/main/resources/presetSectors/" + sector + "MarketCap.txt", marketCap);
-
-            System.out.println(sector + " updated: " + System.currentTimeMillis());
+            updateMarketCap(sector);
         }
     }
 }
