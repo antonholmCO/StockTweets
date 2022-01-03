@@ -1,13 +1,12 @@
-package online.stocktweets.StockTweets.controller;
+package online.stocktweets.StockTweets.model;
 
 import com.google.gson.*;
-import online.stocktweets.StockTweets.model.ExchangeService;
-import online.stocktweets.StockTweets.model.Sector;
-import online.stocktweets.StockTweets.model.Symbol;
 import online.stocktweets.StockTweets.util.PasswordsAndKeys;
-import online.stocktweets.StockTweets.model.Stock;
 import online.stocktweets.StockTweets.util.Utils;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -19,69 +18,68 @@ public class StockService {
     private Gson gson = new Gson();
 
     //Input can be company name or stock symbol
-    public Stock getStock(String stock) {
+    public Stock getStock(String stock) throws HttpClientErrorException, NullPointerException {
         URI uri = createSymbolLookupQuery(stock);
 
-        JsonObject jsonObject = getJsonObject(uri);
-
+        JsonObject jsonObject = createJsonObjectFromURI(uri);
         JsonArray jsonArray = jsonObject.getAsJsonArray("result");
 
         Gson gson = new Gson();
         Stock stockObj = gson.fromJson(jsonArray.get(0), Stock.class);
-
-
         updateStockWithPrice(stockObj);
-        System.out.println(stockObj.getPriceUSD());
+
         return stockObj;
     }
-    public ArrayList<Symbol> getSymbolList(String industry) {
+
+    public ArrayList<Symbol> getSymbolList(String sector) throws HttpClientErrorException, NullPointerException {
         ArrayList<Symbol> symbols = new ArrayList<>();
 
-        if (Sector.SectorVerification.isValidSector(industry.toUpperCase())) {
-            ArrayList<String> symbolsStr = Utils.readTxtFile("src/main/resources/presetSectors/"+ industry +"StockList.txt");
-            ArrayList<String> marketCap = Utils.readTxtFile("src/main/resources/presetSectors/"+ industry +"MarketCap.txt");
-
-//            hämta från API istället för från fil
-
-//            for (String symbol : symbolsStr) {
-//                long mc = getMarketCap(symbol);
-//                marketCap.add(mc);
-//            }
+        if (Sector.SectorVerification.isValidSector(sector.toUpperCase())) {
+            ArrayList<String> symbolsStr = Utils.readTxtFile("src/main/resources/presetSectors/"+ sector +"StockList.txt");
+            ArrayList<String> marketCap = Utils.readTxtFile("src/main/resources/presetSectors/"+ sector +"MarketCap.txt");
 
             for (int i = 0; i < symbolsStr.size(); i++) {
                 symbols.add(new Symbol(symbolsStr.get(i), Long.parseLong(marketCap.get(i))));
             }
 
         } else {
-            System.out.println("COULD NOT FIND, GE ERROR");
-            symbols = null;
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Sector doesn't exist");
         }
 
         return symbols;
     }
 
     public long getMarketCap(String symbol) {
-        URI uri = createMarketCapQuery(symbol);
-        JsonObject jsonObject = getJsonObject(uri);
+        long marketCapLong;
 
-        double marketCap = jsonObject.get("marketCapitalization").getAsDouble();
-        marketCap *= 1000000; //TODO checka detta, ger fel, tror det är för tex TSM inte är på US börs och därför ger market cap i TWD istället för USD
-        long marketCapLong = (long) marketCap;
+        URI uri = createMarketCapQuery(symbol);
+        try {
+            JsonObject jsonObject = createJsonObjectFromURI(uri);
+            double marketCap = jsonObject.get("marketCapitalization").getAsDouble();
+            marketCap *= 1000000;
+            marketCapLong = (long) marketCap;
+        } catch (NullPointerException e) {
+            marketCapLong = 0;
+            e.printStackTrace();
+        }
 
         return marketCapLong;
     }
 
-    private void updateStockWithPrice(Stock stock) {
+    private void updateStockWithPrice(Stock stock) throws HttpClientErrorException {
         URI uri = createPriceQuery(stock.getSymbol());
 
-        JsonObject jsonObject = getJsonObject(uri);
+        JsonObject jsonObject = createJsonObjectFromURI(uri);
 
         double price = jsonObject.get("c").getAsDouble();
+        double percentChange = jsonObject.get("dp").getAsDouble();
         stock.setPriceUSD(price);
+        stock.setPercentChange(percentChange);
     }
 
-    private JsonObject getJsonObject(URI uri) {
+    private JsonObject createJsonObjectFromURI(URI uri) throws HttpClientErrorException {
         RestTemplate restTemplate = new RestTemplate();
+
         String json = restTemplate.getForObject(uri, String.class);
 
         JsonElement jsonElement = JsonParser.parseString(json);
@@ -128,7 +126,6 @@ public class StockService {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-        System.out.println(uri);
 
         return uri;
     }

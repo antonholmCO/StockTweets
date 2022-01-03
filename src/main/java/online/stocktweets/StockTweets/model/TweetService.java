@@ -1,4 +1,4 @@
-package online.stocktweets.StockTweets.controller;
+package online.stocktweets.StockTweets.model;
 
 import com.google.gson.*;
 import online.stocktweets.StockTweets.util.PasswordsAndKeys;
@@ -6,11 +6,9 @@ import online.stocktweets.StockTweets.model.Tweets;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
-import java.lang.reflect.Array;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class TweetService {
 
@@ -49,7 +47,7 @@ public class TweetService {
         ArrayList<String> authorIds = new ArrayList<>();
 
         for (Tweets.Data tweet : tweets.getData()) {
-            authorIds.add(tweet.authorIdkompis());
+            authorIds.add(tweet.authorIdGetter());
         }
         URI uri = createTweetUserQuery(authorIds);
 
@@ -63,11 +61,6 @@ public class TweetService {
 
             tweets.getData().get(i++).setAuthor(out);
         }
-
-        for (Tweets.Data author : tweets.getData()) {
-            System.out.println(author.getAuthorName());
-        }
-
     }
 
     private JsonObject getJsonObject(URI uri) {
@@ -117,10 +110,7 @@ public class TweetService {
         }
 
         strb.delete(strb.length()-1, strb.length());
-        System.out.println(strb.toString());
-
         String strURI = strb.toString();
-        System.out.println(strURI);
 
         try {
             uri = new URI(strURI);

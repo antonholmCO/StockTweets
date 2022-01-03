@@ -1,10 +1,8 @@
 package online.stocktweets.StockTweets.controller;
 
 import online.stocktweets.StockTweets.model.*;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import online.stocktweets.StockTweets.util.Utils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
@@ -13,7 +11,6 @@ import java.util.List;
 @Controller
 @RequestMapping(path = "api/v1")
 public class APIController {
-    StockService ss = new StockService();
 
     @GetMapping("/")
     public String apiIndex() {
@@ -25,18 +22,23 @@ public class APIController {
         return "documentation.html";
     }
 
-
-    @GetMapping("/symbols/{industry}")
+    @GetMapping("/symbols/{sector}")
     @ResponseBody
-    public List<?> getSymbols(@PathVariable String industry, HttpServletResponse response) {
-        ArrayList<Symbol> symbols = ss.getSymbolList(industry);
-
+    public List<?> getSymbols(@PathVariable String sector, HttpServletResponse response) {
         response.setHeader("Access-Control-Allow-Origin", "*");
-        return symbols;
+
+        return new StockService().getSymbolList(sector);
     }
 
+    @GetMapping("/stocktweet/{symbol}")
+    @ResponseBody
+    public StockTweets getData(@PathVariable String symbol, HttpServletResponse response) {
+        response.setHeader("Access-Control-Allow-Origin", "*");
 
-    @GetMapping("/tweets/{stockSymbol}")
+        return new StockTweetService().buildStockTweets(symbol);
+    }
+
+    /*    @GetMapping("/tweets/{stockSymbol}")
     @ResponseBody
     public List getTweets(@PathVariable String stockSymbol, HttpServletResponse response) {
         TweetService ts = new TweetService();
@@ -54,10 +56,10 @@ public class APIController {
         }
         response.setHeader("Access-Control-Allow-Origin", "*");
         return t2.data;
-    }
+    }*/
 
 
-    @GetMapping("/stock/{name}")
+/*    @GetMapping("/stock/{name}")
     @ResponseBody
     public List getDrink1(@PathVariable String name) {
         StockService ss = new StockService();
@@ -65,19 +67,6 @@ public class APIController {
         ArrayList <Stock> stocks = new ArrayList<>();
         stocks.add(stock);
         return stocks;
-    }
-
-    @GetMapping("/stocktweet/{symbol}")
-    @ResponseBody
-    public StockTweets getData(@PathVariable String symbol) {
-        StockService ss = new StockService();
-        TweetService ts = new TweetService();
-
-        Stock stock = ss.getStock(symbol);
-        Tweets tweets = ts.getTweets(symbol);
-        StockTweets st = new StockTweets(stock, tweets);
-
-        return st;
-    }
+    }*/
 }
 

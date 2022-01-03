@@ -7,6 +7,7 @@ public class Stock {
     private String description;
     private String symbol;
     private double c;
+    private double percentChange;
 
 
     public String getCompanyName() {
@@ -22,6 +23,14 @@ public class Stock {
     }
     public double getPriceSEK() {
         return calculateSEK(c);
+    }
+
+    public double getPercentChange() {
+        return percentChange;
+    }
+
+    public void setPercentChange(double percentChange) {
+        this.percentChange = percentChange;
     }
 
     public void setSymbol(String symbol) {
