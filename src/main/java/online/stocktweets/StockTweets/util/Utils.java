@@ -1,31 +1,44 @@
 package online.stocktweets.StockTweets.util;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 import java.util.ArrayList;
 
 public class Utils {
 
-    public static class readFiles {
-        public static ArrayList<String> readTxtFile(String path){
-            ArrayList<String> out = new ArrayList<>();
-            File file = new File(path);
-            try {
-                BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+    public static ArrayList<String> readTxtFile(String path){
+        ArrayList<String> out = new ArrayList<>();
+        File file = new File(path);
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
 
-                String str;
+            String str;
 
-            while ((str = bufferedReader.readLine()) != null) {
-                out.add(str);
+        while ((str = bufferedReader.readLine()) != null) {
+            out.add(str);
+        }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return out;
+    }
+
+
+    public static void writeTxtFile(String path, ArrayList<String> content){
+        File file = new File(path);
+        try {
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
+
+            for (String str : content) {
+                bw.write(str);
+                bw.newLine();
             }
 
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            bw.flush();
 
-            return out;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

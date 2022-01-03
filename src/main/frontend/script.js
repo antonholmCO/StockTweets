@@ -108,8 +108,6 @@ $(document).ready(function () {
 
 
 
-
-
 function mouse_over(element_id) {
     let procent = (Math.round(big_data[element_id].usd_24h_change * 100) / 100).toFixed(2);
     let new_element = `<div class="info-window"><h3 class="text-capitalize">${element_id}</h3> <p class="text-capitalize">Name: ${element_id}</p> <p>MarketCap: $${big_data[element_id].usd_market_cap}</p><p>Price: ${big_data[element_id].usd}</p><p>Change: ${procent}%</p></div>`
@@ -179,3 +177,14 @@ function close_overlay() {
     element.remove();
 
 }
+
+
+/* $('.collapse').collapse()
+    $('#myCollapsible').collapse({
+        toggle: false
+    })
+
+    $('#myCollapsible').on('hidden.bs.collapse', function () {
+    // do something…
+    })
+*/
