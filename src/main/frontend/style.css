@@ -132,20 +132,74 @@
     cursor: pointer;
 }
 
+.col {
+    padding: 0;
+}
 
 .overlay {
     width: 100%;
-    height: 90vh;
+    min-height: 99vh;
     position: absolute;
     top: 0;
+    left: 0;
+    z-index: 9999;
 }
 
 body {
     position: relative;
+    overflow-x: hidden;
 }
 
-.info-window-element {
+.twitter-window-element {
+    background-color: rgb(29, 155, 240);
     height: 75vh;
+
+    overflow: scroll;
+    overflow-x: hidden;
+    border-width: 5px;
+    border-style: inset;
+    border-image: linear-gradient(to right, rgb(62, 233, 255), rgb(29, 155, 240)) 1;
+}
+
+.stock-window-element {
+    height: 75vh;
+
+
+}
+
+.twitter-element {
+    transition: .3s transform cubic-bezier(.155, 1.105, .295, 1.12), .3s box-shadow, .3s -webkit-transform cubic-bezier(.155, 1.105, .295, 1.12);
+}
+
+.twitter-element:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, .12), 0 4px 8px rgba(0, 0, 0, .06);
+}
+
+/** Scrollbar*/
+
+/* width */
+::-webkit-scrollbar {
+    width: 20px;
+    margin-right: 2px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: rgb(35, 88, 124);
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: rgb(117, 122, 126);
+
 }
 
 #headingOne.card-header{
@@ -172,5 +226,4 @@ h1{
 
 p{
     padding-left: 20px;
-
 }

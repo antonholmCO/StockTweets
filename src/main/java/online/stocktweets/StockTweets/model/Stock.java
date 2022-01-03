@@ -9,7 +9,6 @@ public class Stock {
     private double c;
 
 
-
     public String getCompanyName() {
         return description;
     }

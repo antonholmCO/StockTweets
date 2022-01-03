@@ -1,20 +1,31 @@
-/*
+let scrollText = ''
+
+
 const socket = new WebSocket('wss://ws.finnhub.io?token=c70ab7qad3id7ammkm3g');
 // Connection opened -> Subscribe
 socket.addEventListener('open', function (event) {
-    socket.send(JSON.stringify({ 'type': 'subscribe', 'symbol': 'AAPL' }))
     socket.send(JSON.stringify({ 'type': 'subscribe', 'symbol': 'BINANCE:BTCUSDT' }))
     socket.send(JSON.stringify({ 'type': 'subscribe', 'symbol': 'IC MARKETS:1' }))
+    
 });
 // Listen for messages
 socket.addEventListener('message', function (event) {
-    console.log('Message from server ', event.data);
+    
+    //console.log('Message from server ', event.data);
+    var msg = JSON.parse(event.data);
+    let scrollText = ''
+    for (let symbol in msg['data'])
+        newText = msg['data'][symbol]['s'] + msg['data'][symbol]['p']
+        scrollText = scrollText + newText
+    
+    $('#scroll-text').text(scrollText)
+    
 });
 // Unsubscribe
 var unsubscribe = function (symbol) {
     socket.send(JSON.stringify({ 'type': 'unsubscribe', 'symbol': symbol }))
 }
-*/
+
 
 let big_data = {}
 
@@ -91,6 +102,8 @@ $(document).ready(function () {
                 $(text).appendTo("#treemap");
             }
         })
+        
+    
 });
 
 
@@ -119,17 +132,39 @@ function openModal(stock) {
         headers: { "Accept": "application/json" }
     })
         .done(function (data) {
+            console.log(big_data[stock])
+            
 
+            let tweetArray = []
 
+            for (let tweet in data) {
+                let tweets = `<li class="bg-light p-1 rounded twitter-element"><img class="d-inline" style="width:32px;height:32px;"src="resources/twitterTransparent.png"><a href="#" class="text-primary text-decoration-none">${data[tweet]['id']}</a><p>${data[tweet]['text']}</p></li>`
+                tweetArray.push(tweets)
+            }
             let new_element = `<div id="info-overlay-window" class="overlay bg-dark">
                 <div class="row">
-                <div class="col-lg-6 bg-dark info-window-element"><h1 class="text-light text-center text-capitalize">${stock}</h1></div>
-                <div class="col-lg-6 bg-primary info-window-element"><h1 class="text-light text-center">Tweets</h1>
+                <div class="col-lg-6 bg-dark stock-window-element"><h1 class="text-light text-center text-capitalize">${stock}</h1>
+                <div class="col-lg-8 m-auto">
+                <ul class="list-unstyled text-light m-4">
+                    <li><h3>Price: ${big_data[stock]['usd']}</h3></li>
+                    <li><h3>Marketcap: ${big_data[stock]['usd_market_cap']}</h3></li>
+                    
+                    <li><h3>Change 24h: ${(big_data[stock]['usd_24h_change'] * 100 / 100).toFixed(2)}%</h3></li>
+                </ul>
+               </div>
                 
-               
+                </div>
+
+
+                <div class="col-lg-6 twitter-window-element"><h1 class="text-light text-center">Tweets <img style="width:50px;height:50px;"src="resources/twitter.png"></h1>
+                <h5 class="text-capitalize text-center text-light mt-2">Topic: ${stock}</h5>
+                <div class="col-lg-10 m-auto">
+                <ul class="list-unstyled">${tweetArray}</ul>
                 </div>
                 
-                <div class="col-lg-12 d-flex justify-content-center"><button class="btn btn-danger btn-lg" onclick="close_overlay()">Stäng</button></div>
+                </div>
+                
+                <div class="col-lg-12 d-flex justify-content-center"><button class="btn btn-secondary btn-lg mt-5" onclick="close_overlay()">Close</button></div>
                 </div>
                 </div>`
 
