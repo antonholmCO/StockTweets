@@ -67,23 +67,17 @@ public class APIController {
         return stocks;
     }
 
-    @GetMapping("/stocktweets")
+    @GetMapping("/stocktweet/{symbol}")
     @ResponseBody
-    public List getData() {
-        ArrayList<StockTweets> stockTweets = new ArrayList<>();
-
+    public StockTweets getData(@PathVariable String symbol) {
         StockService ss = new StockService();
         TweetService ts = new TweetService();
-        ArrayList<String> stockList = Utils.readTxtFile("src/main/resources/presetSectors/techStockList.txt");
-        for (String s : stockList){
-            Stock stock = ss.getStock(s);
-            Tweets tweets = ts.getTweets(s);
-            StockTweets st = new StockTweets(stock, tweets);
-            stockTweets.add(st);
-        }
 
+        Stock stock = ss.getStock(symbol);
+        Tweets tweets = ts.getTweets(symbol);
+        StockTweets st = new StockTweets(stock, tweets);
 
-        return stockTweets;
+        return st;
     }
 }
 

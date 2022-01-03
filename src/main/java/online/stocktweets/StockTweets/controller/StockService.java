@@ -31,7 +31,7 @@ public class StockService {
 
 
         updateStockWithPrice(stockObj);
-
+        System.out.println(stockObj.getPriceUSD());
         return stockObj;
     }
     public ArrayList<Symbol> getSymbolList(String industry) {

@@ -8,29 +8,42 @@ public class Tweets {
     Data l = new Data();
 
     public class Data {
+        private String author_id;
         public String id;
         public String text;
+        public String authorName;
 
         public Data() {
 
         }
 
-        public Data(String tweetId, String text) {
-            id = tweetId;
-            this.text = text;
+        public String authorIdkompis() {
+            return getAuthor_id();
         }
 
+        private String getAuthor_id() {
+            return author_id;
+        }
         public String getId() {
             return id;
         }
         public String getText() {
             return text;
         }
+        public void setAuthor(String authorName) {
+            this.authorName = authorName;
+        }
 
+        public String getAuthorName() {
+            return authorName;
+        }
 
         @Override
         public String toString() {
-            return id + " " + text;
+            return author_id + " " + id + " " + text;
         }
+    }
+    public List<Data> getData(){
+        return data;
     }
 }
