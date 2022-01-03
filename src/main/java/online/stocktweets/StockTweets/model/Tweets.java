@@ -2,13 +2,12 @@ package online.stocktweets.StockTweets.model;
 
 import java.util.List;
 
-public class Tweet {
+public class Tweets {
     public List<Data> data;
 
     Data l = new Data();
 
     public class Data {
-        public String userID;
         public String id;
         public String text;
 
@@ -16,8 +15,7 @@ public class Tweet {
 
         }
 
-        public Data(String userID, String tweetId, String text) {
-            this.userID = userID;
+        public Data(String tweetId, String text) {
             id = tweetId;
             this.text = text;
         }
