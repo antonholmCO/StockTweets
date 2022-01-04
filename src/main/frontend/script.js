@@ -1,52 +1,28 @@
 let scrollText = ''
 
-
-const socket = new WebSocket('wss://ws.finnhub.io?token=c70ab7qad3id7ammkm3g');
-// Connection opened -> Subscribe
-socket.addEventListener('open', function (event) {
-    socket.send(JSON.stringify({ 'type': 'subscribe', 'symbol': 'BINANCE:BTCUSDT' }))
-    socket.send(JSON.stringify({ 'type': 'subscribe', 'symbol': 'IC MARKETS:1' }))
-    
-});
-// Listen for messages
-socket.addEventListener('message', function (event) {
-    
-    //console.log('Message from server ', event.data);
-    var msg = JSON.parse(event.data);
-    let scrollText = ''
-    for (let symbol in msg['data'])
-        newText = msg['data'][symbol]['s'] + msg['data'][symbol]['p']
-        scrollText = scrollText + newText
-    
-    $('#scroll-text').text(scrollText)
-    
-});
-// Unsubscribe
-var unsubscribe = function (symbol) {
-    socket.send(JSON.stringify({ 'type': 'unsubscribe', 'symbol': symbol }))
-}
-
-
 let big_data = {}
-
+let sort_list = []
 $(document).ready(function () {
 
     $.ajax({
-        url: 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin%2Cripple%2Cstellar%2Cdecentraland%2Csolana%2Ccardano%2Crevain%2Cethereum%2Ctether&vs_currencies=usd&include_market_cap=true&include_24hr_change=true',
+        url: `http://127.0.0.1:8080/api/v1/symbols/tech`,
         headers: { "Accept": "application/json" }
     })
         .done(function (data) {
-
+            
             big_data = data
 
             // Sort and order by market cap
             let total_cap = 0
-            let sort_list = []
+            
 
-            for (let f in data) {
-                total_cap = total_cap + data[f].usd_market_cap;
-                sort_list.push({ 'name': f, 'marketcap': data[f].usd_market_cap, 'change': data[f].usd_24h_change, 'price': data[f].usd })
+            for (let symbol in data) {
+                
+                total_cap = total_cap + data[symbol]['marketcap'];
+                sort_list.push({ 'name': data[symbol]['symbol'], 'marketcap': data[symbol]['marketcap']})
             }
+
+            
 
             function compare(a, b) {
                 if (a.marketcap > b.marketcap) {
@@ -77,28 +53,12 @@ $(document).ready(function () {
                 let symbol = ''
 
                 // Sets class on element based on stockprice increased or decreased
-                if (procent > 0) {
-                    if (procent <= 2) {
-                        symbol = 'up_2'
-                    } else if (procent <= 5) {
-                        symbol = 'up_5'
-                    } else {
-                        symbol = 'up_10'
-                    }
-
-                } else {
-                    if (procent >= -2) {
-                        symbol = 'down_2'
-                    } else if (procent >= -5) {
-                        symbol = 'down_5'
-                    } else {
-                        symbol = 'down_10'
-                    }
-
-                }
-
+            
                 //Creates element and appends to treemap element
-                let text = `<div id="${sort_list[x].name}" class="${symbol} stock-element" style="width:${width}%; height:${height}px;" onmouseover="mouse_over(this.id)" onmouseout="mouse_out()" onclick="openModal(this.id)"><h3 class="text-capitalize">${sort_list[x].name}</h3>$${sort_list[x].price}<strong><br>${procent}</strong>%<br><em>Size, width ${market_percentage}%</div>`
+                let text = `<div id="${sort_list[x]['name']}" class="treemap_element stock-element" style="width:${width}%; height:${height}px;" onmouseover="mouse_over(this.id)" onmouseout="mouse_out()" onclick="openModal(this.id)">
+                <h3 class="text-capitalize">${sort_list[x]['name']}</h3><p id="${sort_list[x]['name']}price"></p><br></div>`
+                
+                
                 $(text).appendTo("#treemap");
             }
         })
@@ -109,8 +69,9 @@ $(document).ready(function () {
 
 
 function mouse_over(element_id) {
-    let procent = (Math.round(big_data[element_id].usd_24h_change * 100) / 100).toFixed(2);
-    let new_element = `<div class="info-window"><h3 class="text-capitalize">${element_id}</h3> <p class="text-capitalize">Name: ${element_id}</p> <p>MarketCap: $${big_data[element_id].usd_market_cap}</p><p>Price: ${big_data[element_id].usd}</p><p>Change: ${procent}%</p></div>`
+    let procent = (Math.round(23 * 100) / 100).toFixed(2);
+    
+    let new_element = `<div class="info-window"><h3 class="text-capitalize">${element_id}</h3> <p class="text-capitalize">Name: ${element_id}</p> <p>MarketCap: $</p><p>Price: </p><p>Change: 100%</p></div>`
 
 
 
@@ -128,28 +89,41 @@ function mouse_out() {
 function openModal(stock) {
 
     $.ajax({
-        url: `http://127.0.0.1:8080/api/v1/tweets/${stock}`,
+        url: `http://127.0.0.1:8080/api/v1/stocktweet/${stock}`,
         headers: { "Accept": "application/json" }
     })
         .done(function (data) {
-            console.log(big_data[stock])
-            
+            let marketcap = ''
+
+            console.log(data)
+            for (let x in sort_list) {
+                
+                if (sort_list[x]['name'] === stock) {
+                    marketcap = sort_list[x]['marketcap']
+                }
+            }
 
             let tweetArray = []
 
-            for (let tweet in data) {
-                let tweets = `<li class="bg-light p-1 rounded twitter-element"><img class="d-inline" style="width:32px;height:32px;"src="resources/twitterTransparent.png"><a href="#" class="text-primary text-decoration-none">${data[tweet]['id']}</a><p>${data[tweet]['text']}</p></li>`
+            for (let tweet in data['tweets']['data']) {
+        
+                let tweets = `<li class="bg-light p-1 rounded twitter-element">
+                <img class="d-inline" style="width:32px;height:32px;"src="resources/twitterTransparent.png">
+                <b><a class="text-decoration-none text-primary" href="https://twitter.com/${data['tweets']['data'][tweet]['authorName']}">${data['tweets']['data'][tweet]['authorName']}</a></b>
+                <a class="text-decoration-none text-dark" href="https://twitter.com/${data['tweets']['data'][tweet]['authorName']}/status/${data['tweets']['data'][tweet]['id']}"><p>${data['tweets']['data'][tweet]['text']}</p></a></li>`
                 tweetArray.push(tweets)
             }
             let new_element = `<div id="info-overlay-window" class="overlay bg-dark">
                 <div class="row">
-                <div class="col-lg-6 bg-dark stock-window-element"><h1 class="text-light text-center text-capitalize">${stock}</h1>
+                <div class="col-lg-6 bg-dark stock-window-element"><h1 class="text-light text-center text-capitalize">${data['stock']['companyName']}</h1>
                 <div class="col-lg-8 m-auto">
                 <ul class="list-unstyled text-light m-4">
-                    <li><h3>Price: ${big_data[stock]['usd']}</h3></li>
-                    <li><h3>Marketcap: ${big_data[stock]['usd_market_cap']}</h3></li>
+                    <li><h3>Price in USD: ${data['stock']['priceUSD']}</h3></li>
+                    <li><h3>Price in SEK: ${data['stock']['priceSEK']}</h3></li>
+                    <li><h3>Marketcap: ${marketcap}</h3></li>
                     
-                    <li><h3>Change 24h: ${(big_data[stock]['usd_24h_change'] * 100 / 100).toFixed(2)}%</h3></li>
+                    <li><h3>Change: ${data['stock']['percentChange']}%</h3></li>
+                    <li><h3>Symbol: ${data['stock']['symbol']}</h3></li>
                 </ul>
                </div>
                 
@@ -179,12 +153,58 @@ function close_overlay() {
 }
 
 
-/* $('.collapse').collapse()
-    $('#myCollapsible').collapse({
-        toggle: false
-    })
+const socket = new WebSocket('wss://ws.finnhub.io?token=c70ab7qad3id7ammkm3g');
+// Connection opened -> Subscribe
+socket.addEventListener('open', function (event) {
+    for (let symbol in sort_list) {
+        socket.send(JSON.stringify({ 'type': 'subscribe', 'symbol': sort_list[symbol]['name']}))
+    }
+});
+// Listen for messages
+socket.addEventListener('message', function (event) {
 
-    $('#myCollapsible').on('hidden.bs.collapse', function () {
-    // do something…
-    })
-*/
+    //console.log('Message from server ', event.data);
+    var msg = JSON.parse(event.data);
+    //console.log(msg)
+    let scrollText = ''
+    for (let symbol in msg['data'])
+        newText = msg['data'][symbol]['s'] + msg['data'][symbol]['p']
+        scrollText = scrollText + newText
+
+    $('#scroll-text').text(scrollText)
+
+    //Update treemap elements
+
+    for (let symbol in msg['data'])
+        lastPrice = {'symbol': msg['data'][symbol]['s'], 'lastprice': msg['data'][symbol]['p']}
+    
+
+        
+        if (lastPrice['lastprice'] > 0) {
+            if (lastPrice['lastprice'] <= 500) {
+                symbol = 'up_2'
+            } else if (lastPrice['lastprice'] <= 1000) {
+                symbol = 'up_5'
+            } else {
+                symbol = 'up_10'
+            }
+
+        } else {
+            if (lastPrice['lastprice'] >= -2) {
+                symbol = 'down_2'
+            } else if (lastPrice['lastprice'] >= -5) {
+                symbol = 'down_5'
+            } else {
+                symbol = 'down_10'
+            }
+
+        }
+
+        $(`#${lastPrice['symbol']}`).addClass(symbol)
+        $(`#${lastPrice['symbol']}price`).html(`$${lastPrice['lastprice']}`)
+
+});
+// Unsubscribe
+var unsubscribe = function (symbol) {
+    socket.send(JSON.stringify({ 'type': 'unsubscribe', 'symbol': symbol }))
+}
