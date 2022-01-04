@@ -15,7 +15,7 @@ public class MarketCapUpdater {
     public void startTimer() {
         long delay = dayInMillis - (System.currentTimeMillis() % dayInMillis); //TODO Fixa till
 
-        updateCapOnStart();
+        //updateCapOnStart();
 
         timer.schedule(new SectorUpdater("tech"), delay, dayInMillis);
         timer.schedule(new SectorUpdater("medical"), delay+60000, dayInMillis);

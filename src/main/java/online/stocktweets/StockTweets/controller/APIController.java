@@ -10,6 +10,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping(path = "api/v1")
+@CrossOrigin(origins = "*")
 public class APIController {
 
     @GetMapping("/")
