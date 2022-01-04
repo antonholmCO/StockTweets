@@ -1,47 +1,88 @@
 let scrollText = ''
-
-let big_data = {}
+let setMarket = ''
+let big_data = {
+    'tech': {},
+    'medical': {}
+}
 let sort_list = []
+let baseSector = 'tech'
+let newText = ''
+
+const buttonElem = `<div class="btn-group mb-2" role="group" aria-label="Basic example">
+                <button type="button" onclick="updateTreemap('tech')" class="btn btn-primary">Tech</button>
+                <button type="button" onclick="updateTreemap('medical')" class="btn btn-primary">Medical</button>
+                <button type="button" class="btn btn-primary disabled">Disabled</button>
+            </div>`
+
+// Websocket
+const socket = new WebSocket('wss://ws.finnhub.io?token=c70ab7qad3id7ammkm3g');
+
+// Document ready
 $(document).ready(function () {
+    requestSymbols()
+    $('#treemap').append(buttonElem);
+});
 
-    $.ajax({
-        url: `http://127.0.0.1:8080/api/v1/symbols/tech`,
-        headers: { "Accept": "application/json" }
-    })
-        .done(function (data) {
-            
-            big_data = data
+function requestSymbols() {
 
-            // Sort and order by market cap
-            let total_cap = 0
-            
+    const market = ['tech', 'medical']
 
-            for (let symbol in data) {
-                
-                total_cap = total_cap + data[symbol]['marketcap'];
-                sort_list.push({ 'name': data[symbol]['symbol'], 'marketcap': data[symbol]['marketcap']})
-            }
+    // Get symbols
+    for (let sector in market) {
 
-            
+        $.ajax({
+            url: `http://127.0.0.1:8080/api/v1/symbols/${market[sector]}`,
+            headers: { "Accept": "application/json" }
+        })
+            .done(function (data) {
 
-            function compare(a, b) {
-                if (a.marketcap > b.marketcap) {
-                    return -1;
+                // Create object of all symbols and marketcap
+                for (let stock in data) {
+                    big_data[market[sector]][data[stock]['symbol']] = {
+                        'marketcap': data[stock]['marketcap']
+                    }
                 }
-                if (a.marketcap < b.marketcap) {
-                    return 1;
+
+                for (let symbol in data) {
+                    sort_list.push({ 'name': data[symbol]['symbol'], 'marketcap': data[symbol]['marketcap'] })
                 }
-                return 0;
+            })
+
+    }
+};
+
+function updateTreemap(marketSector) {
+    
+    // Sort and order by market cap for treemap
+
+    if (marketSector != setMarket) {
+        setMarket = marketSector
+
+        function compare(a, b) {
+            if (a.marketcap > b.marketcap) {
+                return -1;
             }
+            if (a.marketcap < b.marketcap) {
+                return 1;
+            }
+            return 0;
+        }
 
-            sort_list.sort(compare);
+        sort_list.sort(compare);
+
+        // creates elements for each coin
+        let total_cap = 0
+        let elementCreator = ''
 
 
-            // creates elements for each coin
-            for (let x in sort_list) {
+        for (let x in sort_list) {
+            console.log('test')
+            if (big_data[marketSector][sort_list[x]['name']]) {
+
+                total_cap = total_cap + sort_list[x]['marketcap'];
 
                 //Convert change to %
-                let procent = (Math.round(sort_list[x].change * 100) / 100).toFixed(2);
+                //let procent = (Math.round(sort_list[x].change * 100) / 100).toFixed(2);
 
                 //Calculate percentage of this list marketcap
                 let market_share = sort_list[x].marketcap / total_cap
@@ -53,28 +94,30 @@ $(document).ready(function () {
                 let symbol = ''
 
                 // Sets class on element based on stockprice increased or decreased
-            
+
                 //Creates element and appends to treemap element
                 let text = `<div id="${sort_list[x]['name']}" class="treemap_element stock-element" style="width:${width}%; height:${height}px;" onmouseover="mouse_over(this.id)" onmouseout="mouse_out()" onclick="openModal(this.id)">
                 <h3 class="text-capitalize">${sort_list[x]['name']}</h3><p id="${sort_list[x]['name']}price"></p><br></div>`
-                
-                
-                $(text).appendTo("#treemap");
+
+                elementCreator = elementCreator + text
+
+
+
+            } else {
+                $(`#treemap #${sort_list[x]['name']}`).remove()
             }
-        })
-        
+        }
+        $(elementCreator).appendTo("#treemap");
+    }
+
     
-});
+};
 
 
 
 function mouse_over(element_id) {
-    let procent = (Math.round(23 * 100) / 100).toFixed(2);
-    
+    //let procent = (Math.round(23 * 100) / 100).toFixed(2);
     let new_element = `<div class="info-window"><h3 class="text-capitalize">${element_id}</h3> <p class="text-capitalize">Name: ${element_id}</p> <p>MarketCap: $</p><p>Price: </p><p>Change: 100%</p></div>`
-
-
-
     let info_window = $('#' + element_id)
     info_window.append(new_element);
 
@@ -95,9 +138,8 @@ function openModal(stock) {
         .done(function (data) {
             let marketcap = ''
 
-            console.log(data)
             for (let x in sort_list) {
-                
+
                 if (sort_list[x]['name'] === stock) {
                     marketcap = sort_list[x]['marketcap']
                 }
@@ -106,7 +148,7 @@ function openModal(stock) {
             let tweetArray = []
 
             for (let tweet in data['tweets']['data']) {
-        
+
                 let tweets = `<li class="bg-light p-1 rounded twitter-element">
                 <img class="d-inline" style="width:32px;height:32px;"src="resources/twitterTransparent.png">
                 <b><a class="text-decoration-none text-primary" href="https://twitter.com/${data['tweets']['data'][tweet]['authorName']}">${data['tweets']['data'][tweet]['authorName']}</a></b>
@@ -153,58 +195,66 @@ function close_overlay() {
 }
 
 
-const socket = new WebSocket('wss://ws.finnhub.io?token=c70ab7qad3id7ammkm3g');
+
+
+
 // Connection opened -> Subscribe
 socket.addEventListener('open', function (event) {
     for (let symbol in sort_list) {
-        socket.send(JSON.stringify({ 'type': 'subscribe', 'symbol': sort_list[symbol]['name']}))
+         socket.send(JSON.stringify({ 'type': 'subscribe', 'symbol': sort_list[symbol]['name'] }))
     }
 });
+
+
+
+
 // Listen for messages
 socket.addEventListener('message', function (event) {
 
     //console.log('Message from server ', event.data);
     var msg = JSON.parse(event.data);
-    //console.log(msg)
-    let scrollText = ''
+    
     for (let symbol in msg['data'])
-        newText = msg['data'][symbol]['s'] + msg['data'][symbol]['p']
+        newText = `${msg['data'][symbol]['s']}:  ${msg['data'][symbol]['p']}` 
         scrollText = scrollText + newText
 
-    $('#scroll-text').text(scrollText)
-
+    //$('#scroll-text').text(scrollText)
+    
     //Update treemap elements
 
-    for (let symbol in msg['data'])
-        lastPrice = {'symbol': msg['data'][symbol]['s'], 'lastprice': msg['data'][symbol]['p']}
-    
+    for (let symbol in msg['data']) {
+        lastPrice = { 'symbol': msg['data'][symbol]['s'], 'lastprice': msg['data'][symbol]['p'] }
 
-        
-        if (lastPrice['lastprice'] > 0) {
-            if (lastPrice['lastprice'] <= 500) {
-                symbol = 'up_2'
-            } else if (lastPrice['lastprice'] <= 1000) {
-                symbol = 'up_5'
-            } else {
-                symbol = 'up_10'
-            }
+
+        if (parseInt(lastPrice['lastprice']) > parseInt($(`#${msg['data'][symbol]['s']}price`).text())) {
+            
+            $(`#${lastPrice['symbol']}`).css("background-color", "green")
+            
 
         } else {
-            if (lastPrice['lastprice'] >= -2) {
-                symbol = 'down_2'
-            } else if (lastPrice['lastprice'] >= -5) {
-                symbol = 'down_5'
-            } else {
-                symbol = 'down_10'
-            }
-
+            
+            $(`#${lastPrice['symbol']}`).css("background-color", "red")
+            
         }
 
-        $(`#${lastPrice['symbol']}`).addClass(symbol)
-        $(`#${lastPrice['symbol']}price`).html(`$${lastPrice['lastprice']}`)
+        
+        $(`#${lastPrice['symbol']}price`).html(`${lastPrice['lastprice']}`)
+    }
 
 });
-// Unsubscribe
-var unsubscribe = function (symbol) {
-    socket.send(JSON.stringify({ 'type': 'unsubscribe', 'symbol': symbol }))
+
+
+
+function unsubscribe() {
+    console.log('Unsubscribe')
+    if (sort_list.length > 1) {
+        // Unsubscribe
+        for (let symbol in sort_list) {
+            socket.send(JSON.stringify({ 'type': 'unsubscribe', 'symbol': sort_list[symbol]['name'] }))
+            console.log(`Unsubscribed ${sort_list[symbol]['name']}`)
+        }
+
+        big_data = {}
+        sort_list = []
+    }
 }
