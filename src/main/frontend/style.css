@@ -1,5 +1,5 @@
 #treemap {
-    max-width: 100%;
+    max-width: 75%;
 }
 
 .navbar-brand {
@@ -124,6 +124,7 @@
     width: 200px;
     padding: 10px;
     border-radius: 20px;
+    z-index:9999;
 
 
 }
@@ -217,13 +218,3 @@ body {
     
 }
 
-h1{
-    padding-left: 20px;
-    padding-top: 10px;
-    font-weight: bold;
-
-}
-
-p{
-    padding-left: 20px;
-}
