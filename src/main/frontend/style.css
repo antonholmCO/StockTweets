@@ -1,5 +1,5 @@
 #treemap {
-    max-width: 75%;
+    max-width: 100%;
 }
 
 .navbar-brand {
@@ -10,8 +10,8 @@
 }
 
 
-.up_10 {
-    background-color: rgb(0, 255, 0);
+.treemap_element {
+    background-color: rgb(90, 131, 133);
     border: 1px solid black;
     font-size: 100%;
     line-height: 150%;
@@ -22,101 +22,37 @@
     transition: color 0.5s;
 }
 
-.up_10:hover {
+.treemap_element:hover {
     background: grey !important;
     color: white;
 }
+
+.up_10 {
+    background-color: rgb(0, 255, 0);
+    
+}
+
 
 .up_5 {
     background-color: rgb(15, 133, 15);
-    border: 1px solid black;
-    font-size: 100%;
-    line-height: 150%;
-    overflow: hidden;
-
-    text-indent: 1%;
-    transition: background 1s;
-    transition: color 0.5s;
 }
-
-.up_5:hover {
-    background: grey !important;
-    color: white;
-}
-
-
 
 .up_2 {
     background-color: rgb(72, 107, 72);
-    border: 1px solid black;
-    font-size: 100%;
-    line-height: 150%;
-    overflow: hidden;
-
-    text-indent: 1%;
-    transition: background 1s;
-    transition: color 0.5s;
 }
-
-.up_2:hover {
-    background: grey !important;
-    color: white;
-}
-
-
 
 .down_2 {
     background-color: rgb(100, 60, 60);
-    border: 1px solid black;
-    font-size: 100%;
-    line-height: 150%;
-    overflow: hidden;
-
-    text-indent: 1%;
-    transition: background 1s;
-    transition: color 0.5s;
 }
-
-.down_2:hover {
-    background: grey !important;
-    color: white;
-}
-
-
 
 .down_5 {
     background-color: rgb(141, 19, 19);
-    border: 1px solid black;
-    font-size: 100%;
-    line-height: 150%;
-    overflow: hidden;
-
-    text-indent: 1%;
-    transition: background 1s;
-    transition: color 0.5s;
-}
-
-.down_5:hover {
-    background: grey !important;
-    color: white;
 }
 
 .down_10 {
     background-color: rgb(255, 0, 0);
-    border: 1px solid black;
-    font-size: 100%;
-    line-height: 150%;
-    overflow: hidden;
-
-    text-indent: 1%;
-    transition: background 1s;
-    transition: color 0.5s;
 }
 
-.down_10:hover {
-    background: grey !important;
-    color: white;
-}
 
 .info-window {
     position: absolute;
@@ -124,7 +60,6 @@
     width: 200px;
     padding: 10px;
     border-radius: 20px;
-    z-index:9999;
 
 
 }
@@ -203,18 +138,28 @@ body {
 
 }
 
-#headingOne.card-header{
+#headingOne.card-header {
     background-color: rgb(207, 205, 205);
-    
+
 }
 
-#headingTwo.card-header{
+#headingTwo.card-header {
     background-color: rgb(207, 205, 205);
-    
+
 }
 
-#headingThree.card-header{
+#headingThree.card-header {
     background-color: rgb(207, 205, 205);
-    
+
 }
 
+h1 {
+    padding-left: 20px;
+    padding-top: 10px;
+    font-weight: bold;
+
+}
+
+p {
+    padding-left: 20px;
+}
