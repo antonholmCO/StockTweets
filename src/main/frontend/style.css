@@ -1,5 +1,5 @@
 #treemap {
-    max-width: 100%;
+    max-width: 78%;
 }
 
 .navbar-brand {
@@ -163,3 +163,8 @@ h1 {
 p {
     padding-left: 20px;
 }
+
+div.col-lg-8.m-auto{
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
