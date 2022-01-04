@@ -16,7 +16,7 @@ public class StockTweetService {
 
    public StockTweets buildStockTweets(String symbol) {
         try {
-            Stock stock = ss.getStock(symbol);
+            Stock stock = ss.getDummyStock();
             Tweets tweets = ts.getTweets(symbol);
             StockTweets st = new StockTweets(stock, tweets);
             return st;

@@ -31,6 +31,15 @@ public class StockService {
         return stockObj;
     }
 
+    public Stock getDummyStock() {
+        Stock stock = new Stock();
+        stock.setSymbol("AAPL");
+        stock.setPercentChange(2.5004);
+        stock.setDescription("APPLE INC");
+        stock.setPriceUSD(182.01);
+        return stock;
+    }
+
     public ArrayList<Symbol> getSymbolList(String sector) throws HttpClientErrorException, NullPointerException {
         ArrayList<Symbol> symbols = new ArrayList<>();
 

@@ -22,7 +22,7 @@ public class Stock {
         return c;
     }
     public double getPriceSEK() {
-        return calculateSEK(c);
+        return calculateDummySek(c);
     }
 
     public double getPercentChange() {
@@ -39,6 +39,22 @@ public class Stock {
 
     public void setPriceUSD(double c) {
         this.c = c;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    private double calculateDummySek(double priceUSD) {
+        double exchangeRate = 9.08;
+        double sek = priceUSD * exchangeRate;
+
+        BigDecimal bigDecimal = BigDecimal.valueOf(sek);
+        bigDecimal = bigDecimal.setScale(2, RoundingMode.HALF_UP);
+
+        sek = bigDecimal.doubleValue();
+
+        return sek;
     }
 
     private double calculateSEK(double priceUSD) {
