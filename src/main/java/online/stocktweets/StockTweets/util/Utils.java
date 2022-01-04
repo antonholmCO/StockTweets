@@ -1,5 +1,7 @@
 package online.stocktweets.StockTweets.util;
 
+import com.google.gson.JsonObject;
+
 import java.io.*;
 import java.util.ArrayList;
 
@@ -40,5 +42,14 @@ public class Utils {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static JsonObject jsonError(String errorCode, String msg) {
+        JsonObject jsonObject = new JsonObject();
+
+        jsonObject.addProperty("Error Code", errorCode);
+        jsonObject.addProperty("Message", msg);
+
+        return jsonObject;
     }
 }

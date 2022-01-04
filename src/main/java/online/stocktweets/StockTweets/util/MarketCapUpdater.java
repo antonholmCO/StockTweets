@@ -1,6 +1,6 @@
 package online.stocktweets.StockTweets.util;
 
-import online.stocktweets.StockTweets.controller.StockService;
+import online.stocktweets.StockTweets.model.StockService;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -14,7 +14,6 @@ public class MarketCapUpdater {
 
     public void startTimer() {
         long delay = dayInMillis - (System.currentTimeMillis() % dayInMillis); //TODO Fixa till
-        System.out.println(delay);
 
         updateCapOnStart();
 
