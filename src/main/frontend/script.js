@@ -143,18 +143,16 @@ function openModal(stock) {
             }
             let new_element = `<div id="info-overlay-window" class="overlay bg-dark">
                 <div class="row">
-                <div class="col-lg-6 bg-dark stock-window-element"><h1 class="text-light text-center text-capitalize">${stock}</h1>
+                <div class="col-lg-6 bg-dark stock-window-element"><h1 class="text-light text-center text-capitalize pt-4">${stock}</h1>
                 <div class="col-lg-8 m-auto">
-                <ul class="list-unstyled text-light m-4">
-                    <li><h3>Price: ${big_data[stock]['usd']}</h3></li>
-                    <li><h3>Marketcap: ${big_data[stock]['usd_market_cap']}</h3></li>
-                    
-                    <li><h3>Change 24h: ${(big_data[stock]['usd_24h_change'] * 100 / 100).toFixed(2)}%</h3></li>
+                <ul class="list-unstyled text-light pt-4 text-center">
+                    <li><h3 class= border border-light p-3>Price: ${big_data[stock]['usd']}</h3></li>
+                    <li><h3 class= border border-light p-3 >Marketcap: ${big_data[stock]['usd_market_cap']}</h3></li>
+                    <li><h3 class= border border-light p-3 >Change 24h: ${(big_data[stock]['usd_24h_change'] * 100 / 100).toFixed(2)}%</h3></li>
                 </ul>
                </div>
                 
                 </div>
-
 
                 <div class="col-lg-6 twitter-window-element"><h1 class="text-light text-center">Tweets <img style="width:50px;height:50px;"src="resources/twitter.png"></h1>
                 <h5 class="text-capitalize text-center text-light mt-2">Topic: ${stock}</h5>
