@@ -98,7 +98,7 @@ $(document).ready(function () {
                 }
 
                 //Creates element and appends to treemap element
-                let text = `<div id="${sort_list[x].name}" class="${symbol} stock-element" style="width:${width}%; height:${height}px;" onmouseover="mouse_over(this.id)" onmouseout="mouse_out()" onclick="openModal(this.id)"><h3 class="text-capitalize">${sort_list[x].name}</h3>$${sort_list[x].price}<strong><br>${procent}</strong>%<br><em>Size, width ${market_percentage}%</div>`
+                let text = `<div id="${sort_list[x].name}" class="${symbol} stock-element" style="width:${width}%; height:${height}px;" onmouseover="mouse_over(this.id)" onmouseout="mouse_out()" onclick="openModal(this.id)"><h3 class="text-capitalize">${sort_list[x].name}</h3><p>$${sort_list[x].price}<strong><br>${procent}</strong>%<br><em>Size, width ${market_percentage}%</p></div>`
                 $(text).appendTo("#treemap");
             }
         })
@@ -179,12 +179,3 @@ function close_overlay() {
 }
 
 
-/* $('.collapse').collapse()
-    $('#myCollapsible').collapse({
-        toggle: false
-    })
-
-    $('#myCollapsible').on('hidden.bs.collapse', function () {
-    // do something…
-    })
-*/
