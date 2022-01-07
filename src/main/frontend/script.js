@@ -1,5 +1,5 @@
 let scrollText = ''
-let setMarket = ''
+let setMarket = 'medical'
 let big_data = {
     'tech': {},
     'medical': {}
@@ -21,6 +21,7 @@ const socket = new WebSocket('wss://ws.finnhub.io?token=c70ab7qad3id7ammkm3g');
 $(document).ready(function () {
     requestSymbols()
     $('#treemap').append(buttonElem);
+    
 });
 
 function requestSymbols() {
@@ -49,12 +50,12 @@ function requestSymbols() {
             })
 
     }
+    
 };
 
 function updateTreemap(marketSector) {
     
     // Sort and order by market cap for treemap
-
     if (marketSector != setMarket) {
         setMarket = marketSector
 
@@ -76,7 +77,6 @@ function updateTreemap(marketSector) {
 
 
         for (let x in sort_list) {
-            console.log('test')
             if (big_data[marketSector][sort_list[x]['name']]) {
 
                 total_cap = total_cap + sort_list[x]['marketcap'];
@@ -117,7 +117,7 @@ function updateTreemap(marketSector) {
 
 function mouse_over(element_id) {
     //let procent = (Math.round(23 * 100) / 100).toFixed(2);
-    let new_element = `<div class="info-window"><h3 class="text-capitalize">${element_id}</h3> <p class="text-capitalize">Name: ${element_id}</p> <p>MarketCap: $</p><p>Price: </p><p>Change: 100%</p></div>`
+    let new_element = `<div class="info-window"><h3 class="text-capitalize">${element_id}</h3> <p class="text-capitalize">Name: ${element_id}</p> <p>MarketCap: $${big_data[setMarket][element_id]['marketcap']}</p><p>Change: 100%</p></div>`
     let info_window = $('#' + element_id)
     info_window.append(new_element);
 
@@ -160,9 +160,9 @@ function openModal(stock) {
                 <div class="col-lg-6 bg-dark stock-window-element"><h1 class="text-light text-center text-capitalize">${data['stock']['companyName']}</h1>
                 <div class="col-lg-8 m-auto">
                 <ul class="list-unstyled text-light m-4">
-                    <li><h3>Price in USD: ${data['stock']['priceUSD']}</h3></li>
-                    <li><h3>Price in SEK: ${data['stock']['priceSEK']}</h3></li>
-                    <li><h3>Marketcap: ${marketcap}</h3></li>
+                    <li><h3>Price in USD: $${data['stock']['priceUSD']}</h3></li>
+                    <li><h3>Price in SEK: ${data['stock']['priceSEK']}sek</h3></li>
+                    <li><h3>Marketcap: $${marketcap}</h3></li>
                     
                     <li><h3>Change: ${data['stock']['percentChange']}%</h3></li>
                     <li><h3>Symbol: ${data['stock']['symbol']}</h3></li>
@@ -199,9 +199,13 @@ function close_overlay() {
 
 // Connection opened -> Subscribe
 socket.addEventListener('open', function (event) {
-    for (let symbol in sort_list) {
-         socket.send(JSON.stringify({ 'type': 'subscribe', 'symbol': sort_list[symbol]['name'] }))
+    let count = 0
+    while (count < 49) {
+        socket.send(JSON.stringify({ 'type': 'subscribe', 'symbol': sort_list[count]['name'] }))
+        count ++
     }
+    updateTreemap('tech')
+    
 });
 
 
@@ -212,7 +216,6 @@ socket.addEventListener('message', function (event) {
 
     //console.log('Message from server ', event.data);
     var msg = JSON.parse(event.data);
-    
     for (let symbol in msg['data'])
         newText = `${msg['data'][symbol]['s']}:  ${msg['data'][symbol]['p']}` 
         scrollText = scrollText + newText
@@ -237,7 +240,7 @@ socket.addEventListener('message', function (event) {
         }
 
         
-        $(`#${lastPrice['symbol']}price`).html(`${lastPrice['lastprice']}`)
+        $(`#${lastPrice['symbol']}price`).html(`$${lastPrice['lastprice']}`)
     }
 
 });
@@ -256,4 +259,40 @@ function unsubscribe() {
         big_data = {}
         sort_list = []
     }
+}
+
+
+
+// TIME
+
+function startTime() {
+    const today = new Date();
+    let h = today.getHours() - 6;
+    let m = today.getMinutes();
+    let s = today.getSeconds();
+    m = checkTime(m);
+    s = checkTime(s);
+    document.getElementById('clock').innerHTML = h + ":" + m + ":" + s;
+    let openHours = h + m
+    if (openHours >= 900 && openHours < 1600) {
+        $('#openClose').addClass("bg-success").html('Open')
+        let hasClass = $('#openClose').hasClass("bg-danger")
+        if (hasClass) {
+            $('#openClose').removeClass("bg-danger")
+        }
+
+    } else {
+        $('#openClose').addClass("bg-danger").html('Closed')
+        let hasClass = $('#openClose').hasClass("bg-success")
+        if (hasClass) {
+            $('#openClose').removeClass("bg-success")
+        }
+    }
+    
+    setTimeout(startTime, 1000);
+}
+
+function checkTime(i) {
+    if (i < 10) { i = "0" + i };  // add zero in front of numbers < 10
+    return i;
 }
