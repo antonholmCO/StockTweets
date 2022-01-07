@@ -157,15 +157,15 @@ function openModal(stock) {
             }
             let new_element = `<div id="info-overlay-window" class="overlay bg-dark">
                 <div class="row">
-                <div class="col-lg-6 bg-dark stock-window-element"><h1 class="text-light text-center text-capitalize">${data['stock']['companyName']}</h1>
+                <div class="col-lg-6 bg-dark stock-window-element border border-light border-5"><h1 class="text-light text-center text-capitalize pt-4">${data['stock']['companyName']}</h1>
                 <div class="col-lg-8 m-auto">
-                <ul class="list-unstyled text-light m-4">
-                    <li><h3>Price in USD: $${data['stock']['priceUSD']}</h3></li>
-                    <li><h3>Price in SEK: ${data['stock']['priceSEK']}sek</h3></li>
-                    <li><h3>Marketcap: $${marketcap}</h3></li>
+                <ul class="list-unstyled text-light pt-4 text-center">
+                    <li><h3 class="border border-light p-3"> Price in USD: ${data['stock']['priceUSD']}</h3></li>
+                    <li><h3 class="border border-light p-3">Price in SEK: ${data['stock']['priceSEK']}</h3></li>
+                    <li><h3 class="border border-light p-3">Marketcap: ${marketcap}</h3></li>
                     
-                    <li><h3>Change: ${data['stock']['percentChange']}%</h3></li>
-                    <li><h3>Symbol: ${data['stock']['symbol']}</h3></li>
+                    <li><h3 class="border border-light p-3">Change: ${data['stock']['percentChange']}%</h3></li>
+                    <li><h3 class="border border-light p-3">Symbol: ${data['stock']['symbol']}</h3></li>
                 </ul>
                </div>
                 
@@ -205,7 +205,7 @@ socket.addEventListener('open', function (event) {
         count ++
     }
     updateTreemap('tech')
-    
+
 });
 
 
@@ -224,8 +224,18 @@ socket.addEventListener('message', function (event) {
     
     //Update treemap elements
 
-    for (let symbol in msg['data']) {
-        lastPrice = { 'symbol': msg['data'][symbol]['s'], 'lastprice': msg['data'][symbol]['p'] }
+
+    for (let symbol in msg['data'])
+        lastPrice = {'symbol': msg['data'][symbol]['s'], 'lastprice': msg['data'][symbol]['p']}
+        
+        if (lastPrice['lastprice'] > 0) {
+            if (lastPrice['lastprice'] <= 500) {
+                symbol = 'up_2'
+            } else if (lastPrice['lastprice'] <= 1000) {
+                symbol = 'up_5'
+            } else {
+                symbol = 'up_10'
+            }
 
 
         if (parseInt(lastPrice['lastprice']) > parseInt($(`#${msg['data'][symbol]['s']}price`).text())) {
@@ -239,7 +249,7 @@ socket.addEventListener('message', function (event) {
             
         }
 
-        
+
         $(`#${lastPrice['symbol']}price`).html(`$${lastPrice['lastprice']}`)
     }
 

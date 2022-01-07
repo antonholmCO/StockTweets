@@ -1,7 +1,5 @@
 package online.stocktweets.StockTweets.model;
 
-import java.util.ArrayList;
-
 public class StockTweets {
 
     private Stock stock;

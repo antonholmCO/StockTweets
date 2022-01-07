@@ -14,9 +14,6 @@ import java.util.ArrayList;
 
 public class StockService {
 
-    private RestTemplate restTemplate = new RestTemplate();
-    private Gson gson = new Gson();
-
     //Input can be company name or stock symbol
     public Stock getStock(String stock) throws HttpClientErrorException, NullPointerException {
         URI uri = createSymbolLookupQuery(stock);
@@ -26,9 +23,20 @@ public class StockService {
 
         Gson gson = new Gson();
         Stock stockObj = gson.fromJson(jsonArray.get(0), Stock.class);
+
         updateStockWithPrice(stockObj);
 
         return stockObj;
+    }
+
+    public Stock getDummyStock() {
+        Stock stock = new Stock();
+        stock.setSymbol("AAPL");
+        stock.setPercentChange(2.5004);
+        stock.setDescription("APPLE INC");
+        stock.setPriceUSD(182.01);
+        stock.setOpenPrice(181.0);
+        return stock;
     }
 
     public ArrayList<Symbol> getSymbolList(String sector) throws HttpClientErrorException, NullPointerException {
@@ -72,9 +80,11 @@ public class StockService {
         JsonObject jsonObject = createJsonObjectFromURI(uri);
 
         double price = jsonObject.get("c").getAsDouble();
+        double openPrice = jsonObject.get("o").getAsDouble();
         double percentChange = jsonObject.get("dp").getAsDouble();
         stock.setPriceUSD(price);
         stock.setPercentChange(percentChange);
+        stock.setOpenPrice(openPrice);
     }
 
     private JsonObject createJsonObjectFromURI(URI uri) throws HttpClientErrorException {
@@ -91,7 +101,10 @@ public class StockService {
     private URI createSymbolLookupQuery(String stockName) {
         StringBuilder strb = new StringBuilder();
         URI uri = null;
-        String strURI = strb.append("https://finnhub.io/api/v1/search?q=").append(stockName).append(PasswordsAndKeys.finnhubKey).toString();
+        String strURI = strb.append("https://finnhub.io/api/v1/search?q=")
+                .append(stockName)
+                .append(PasswordsAndKeys.finnhubKey)
+                .toString();
 
         try {
             uri = new URI(strURI);
@@ -105,7 +118,10 @@ public class StockService {
     private URI createPriceQuery(String stockSymbol) {
         StringBuilder strb = new StringBuilder();
         URI uri = null;
-        String strURI = strb.append("https://finnhub.io/api/v1/quote?symbol=").append(stockSymbol).append(PasswordsAndKeys.finnhubKey).toString();
+        String strURI = strb.append("https://finnhub.io/api/v1/quote?symbol=")
+                .append(stockSymbol)
+                .append(PasswordsAndKeys.finnhubKey)
+                .toString();
 
         try {
             uri = new URI(strURI);
@@ -119,7 +135,10 @@ public class StockService {
     private URI createMarketCapQuery(String stockSymbol) {
         StringBuilder strb = new StringBuilder();
         URI uri = null;
-        String strURI = strb.append("https://finnhub.io/api/v1/stock/profile2?symbol=").append(stockSymbol).append(PasswordsAndKeys.finnhubKey).toString();
+        String strURI = strb.append("https://finnhub.io/api/v1/stock/profile2?symbol=")
+                .append(stockSymbol)
+                .append(PasswordsAndKeys.finnhubKey)
+                .toString();
 
         try {
             uri = new URI(strURI);

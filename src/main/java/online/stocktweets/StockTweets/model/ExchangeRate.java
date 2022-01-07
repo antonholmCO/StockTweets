@@ -1,7 +1,9 @@
 package online.stocktweets.StockTweets.model;
 
 public class ExchangeRate {
+
     private static ExchangeService es = new ExchangeService();
+
     private static int oneHourMillis = 3600000;
     private static int hoursBetweenCalls = 12;
 

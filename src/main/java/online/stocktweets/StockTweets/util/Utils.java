@@ -1,11 +1,11 @@
 package online.stocktweets.StockTweets.util;
 
-import com.google.gson.JsonObject;
-
 import java.io.*;
 import java.util.ArrayList;
 
 public class Utils {
+
+    private static long systime;
 
     public static ArrayList<String> readTxtFile(String path){
         ArrayList<String> out = new ArrayList<>();
@@ -44,12 +44,11 @@ public class Utils {
         }
     }
 
-    public static JsonObject jsonError(String errorCode, String msg) {
-        JsonObject jsonObject = new JsonObject();
+    public static void startMeasureTime() {
+        systime = System.currentTimeMillis();
+    }
 
-        jsonObject.addProperty("Error Code", errorCode);
-        jsonObject.addProperty("Message", msg);
-
-        return jsonObject;
+    public static void measureTime(String message) {
+        System.out.println(message + ": " + (System.currentTimeMillis() - systime)/1000.0);
     }
 }

@@ -1,5 +1,5 @@
 #treemap {
-    max-width: 100%;
+    max-width: 78%;
 }
 
 .navbar-brand {
@@ -147,6 +147,7 @@ body {
     background-color: rgb(207, 205, 205);
 
 }
+
 
 #headingThree.card-header {
     background-color: rgb(207, 205, 205);
