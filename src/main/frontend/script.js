@@ -171,7 +171,6 @@ function openModal(stock) {
                 
                 </div>
 
-
                 <div class="col-lg-6 twitter-window-element"><h1 class="text-light text-center">Tweets <img style="width:50px;height:50px;"src="resources/twitter.png"></h1>
                 <h5 class="text-capitalize text-center text-light mt-2">Topic: ${stock}</h5>
                 <div class="col-lg-10 m-auto">
