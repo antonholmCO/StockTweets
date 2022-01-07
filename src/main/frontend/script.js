@@ -96,7 +96,7 @@ function updateTreemap(marketSector) {
                 // Sets class on element based on stockprice increased or decreased
 
                 //Creates element and appends to treemap element
-                let text = `<div id="${sort_list[x]['name']}" class="treemap_element stock-element" style="width:${width}%; height:${height}px;" onmouseover="mouse_over(this.id)" onmouseout="mouse_out()" onclick="openModal(this.id)">
+                let text = `<div id="${sort_list[x]['name']}" class="treemap_element stock-element z-index-n1" style="width:${width}%; height:${height}px;" onmouseover="mouse_over(this.id)" onmouseout="mouse_out()" onclick="openModal(this.id)">
                 <h3 class="text-capitalize">${sort_list[x]['name']}</h3><p id="${sort_list[x]['name']}price"></p><br></div>`
 
                 elementCreator = elementCreator + text
@@ -157,15 +157,15 @@ function openModal(stock) {
             }
             let new_element = `<div id="info-overlay-window" class="overlay bg-dark">
                 <div class="row">
-                <div class="col-lg-6 bg-dark stock-window-element"><h1 class="text-light text-center text-capitalize">${data['stock']['companyName']}</h1>
+                <div class="col-lg-6 bg-dark stock-window-element border border-light border-5"><h1 class="text-light text-center text-capitalize">${data['stock']['companyName']}</h1>
                 <div class="col-lg-8 m-auto">
-                <ul class="list-unstyled text-light m-4">
-                    <li><h3>Price in USD: $${data['stock']['priceUSD']}</h3></li>
-                    <li><h3>Price in SEK: ${data['stock']['priceSEK']}sek</h3></li>
-                    <li><h3>Marketcap: $${marketcap}</h3></li>
+                <ul class="list-unstyled text-light pt-4 mt-3 text-center">
+                    <li><h3 class="border border-light p-3">Price in USD: $${data['stock']['priceUSD']}</h3></li>
+                    <li><h3 class="border border-light p-3">Price in SEK: ${data['stock']['priceSEK']}sek</h3></li>
+                    <li><h3 class="border border-light p-3">Marketcap: $${marketcap}</h3></li>
                     
-                    <li><h3>Change: ${data['stock']['percentChange']}%</h3></li>
-                    <li><h3>Symbol: ${data['stock']['symbol']}</h3></li>
+                    <li><h3 class="border border-light p-3">Change: ${data['stock']['percentChange']}%</h3></li>
+                    <li><h3 class="border border-light p-3">Symbol: ${data['stock']['symbol']}</h3></li>
                 </ul>
                </div>
                 
@@ -296,3 +296,4 @@ function checkTime(i) {
     if (i < 10) { i = "0" + i };  // add zero in front of numbers < 10
     return i;
 }
+
