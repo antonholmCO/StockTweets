@@ -7,43 +7,8 @@ public class Stock {
     private String description;
     private String symbol;
     private double c;
+    private double o;
     private double percentChange;
-
-
-    public String getCompanyName() {
-        return description;
-    }
-
-    public String getSymbol() {
-        return symbol;
-    }
-
-    public double getPriceUSD() {
-        return c;
-    }
-    public double getPriceSEK() {
-        return calculateDummySek(c);
-    }
-
-    public double getPercentChange() {
-        return percentChange;
-    }
-
-    public void setPercentChange(double percentChange) {
-        this.percentChange = percentChange;
-    }
-
-    public void setSymbol(String symbol) {
-        this.symbol = symbol;
-    }
-
-    public void setPriceUSD(double c) {
-        this.c = c;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
     private double calculateDummySek(double priceUSD) {
         double exchangeRate = 9.08;
@@ -68,5 +33,43 @@ public class Stock {
 
         return sek;
 
+    }
+
+    public String getCompanyName() {
+        return description;
+    }
+    public String getSymbol() {
+        return symbol;
+    }
+    public double getPriceUSD() {
+        return c;
+    }
+    public double getPriceSEK() {
+        return calculateSEK(c);
+    }
+    public double getOpenPriceSEK() {
+        return calculateSEK(o);
+    }
+    public double getOpenPriceUSD() {
+        return o;
+    }
+    public double getPercentChange() {
+        return percentChange;
+    }
+
+    public void setOpenPrice(double o) {
+        this.o = o;
+    }
+    public void setPercentChange(double percentChange) {
+        this.percentChange = percentChange;
+    }
+    public void setSymbol(String symbol) {
+        this.symbol = symbol;
+    }
+    public void setPriceUSD(double c) {
+        this.c = c;
+    }
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
