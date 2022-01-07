@@ -2,7 +2,6 @@ package online.stocktweets.StockTweets.model;
 
 import com.google.gson.*;
 import online.stocktweets.StockTweets.util.PasswordsAndKeys;
-import online.stocktweets.StockTweets.model.Tweets;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -29,12 +28,11 @@ public class TweetService {
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", bearerToken);
-        headers.set("content-type","application/json; charset=utf-8");
+        headers.set("content-type", "application/json; charset=utf-8");
         HttpEntity<String> request = new HttpEntity(headers);
 
         ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.GET, request, String.class);
         responseCode = response.getStatusCode();
-        //TODO handle response codes
         if (responseCode == HttpStatus.OK) {
             String strJSON = response.getBody();
             return parseJSON(strJSON);
@@ -57,7 +55,7 @@ public class TweetService {
         int i = 0;
         for (JsonElement user : jsonArray) {
             String out = user.getAsJsonObject().get("username").toString();
-            out = out.substring(1, out.length()-1);
+            out = out.substring(1, out.length() - 1);
 
             tweets.getData().get(i++).setAuthor(out);
         }
@@ -67,7 +65,7 @@ public class TweetService {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", bearerToken);
-        headers.set("content-type","application/json; charset=utf-8");
+        headers.set("content-type", "application/json; charset=utf-8");
         HttpEntity<String> request = new HttpEntity(headers);
         ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.GET, request, String.class);
 
@@ -89,7 +87,11 @@ public class TweetService {
         StringBuilder strb = new StringBuilder();
         URI uri = null;
 
-        String strURI = strb.append("https://api.twitter.com/2/tweets/search/recent?query=%23").append(stockSymbol).append("%20lang:en").append("&expansions=author_id").toString();
+        String strURI = strb.append("https://api.twitter.com/2/tweets/search/recent?query=%23")
+                .append(stockSymbol)
+                .append("%20lang:en")
+                .append("&expansions=author_id")
+                .toString();
 
         try {
             uri = new URI(strURI);
@@ -105,11 +107,12 @@ public class TweetService {
         URI uri = null;
 
         strb.append("https://api.twitter.com/2/users?ids=");
+
         for (String authorId : authorIdList) {
             strb.append(authorId).append(",");
         }
 
-        strb.delete(strb.length()-1, strb.length());
+        strb.delete(strb.length() - 1, strb.length());
         String strURI = strb.toString();
 
         try {
@@ -120,28 +123,5 @@ public class TweetService {
 
         return uri;
     }
-
-
-    //Ligger kvar tillsvidare ta inte bort utkommenterat
-//    public ArrayList<Tweet> parseTweets(String json) {
-//        ArrayList<Tweet> tweets = new ArrayList<>();
-//
-//        JsonElement jsonElement = JsonParser.parseString(json);
-//        JsonObject jsonObject = jsonElement.getAsJsonObject();
-//
-//        JsonArray jsonArray = jsonObject.getAsJsonArray("data");
-//
-//        for (JsonElement tweetElement : jsonArray) {
-//            JsonObject jsonObj = tweetElement.getAsJsonObject();
-//
-//            String id = jsonObj.get("id").getAsString();
-//            String text = jsonObj.get("text").getAsString();
-//
-//            tweets.add(new Tweet(id, text));
-//        }
-//
-//        return tweets;
-//    }
-
 }
 

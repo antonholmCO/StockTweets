@@ -15,6 +15,7 @@ public class ExchangeService {
     public double getExchangeRate(String curr1, String curr2) {
 
         StringBuilder strb = new StringBuilder();
+
         strb.append("https://v6.exchangerate-api.com/v6/")
                 .append(PasswordsAndKeys.exchangeAPIKey)
                 .append("/pair/")
@@ -22,21 +23,20 @@ public class ExchangeService {
                 .append("/")
                 .append(curr2);
 
-        String json = null;
+        String json;
+        JsonObject jsonObject = null;
 
         try {
             URI uri = new URI(strb.toString());
             json = restTemplate.getForObject(uri, String.class);
-        } catch (URISyntaxException e) {
+            JsonElement jsonElement = JsonParser.parseString(json);
+            jsonObject = jsonElement.getAsJsonObject();
+
+        } catch (URISyntaxException | NullPointerException e) {
             e.printStackTrace();
         }
 
-        JsonElement jsonElement = JsonParser.parseString(json);
-        JsonObject jsonObject = jsonElement.getAsJsonObject();
-
-        double rate = jsonObject.get("conversion_rate").getAsDouble();
-
-        return rate;
+        return jsonObject.get("conversion_rate").getAsDouble();
     }
 
 }
