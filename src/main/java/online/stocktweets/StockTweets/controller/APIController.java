@@ -14,12 +14,12 @@ public class APIController {
 
     @GetMapping("/")
     public String apiIndex() {
-        return getDocumentation(); //TODO Landing page for API
+        return getDocumentation();
     }
 
     @GetMapping("/documentation")
     public String getDocumentation() {
-        return "documentation.html";
+        return "about_API.html";
     }
 
     @GetMapping("/symbols/{sector}")
@@ -30,7 +30,7 @@ public class APIController {
 
     @GetMapping("/stocktweet/{symbol}")
     @ResponseBody
-    public StockTweets getData(@PathVariable String symbol) {
+    public StockTweets getStockTweets(@PathVariable String symbol) {
         return new StockTweetService().buildStockTweets(symbol);
     }
 }
