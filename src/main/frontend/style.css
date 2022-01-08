@@ -1,5 +1,6 @@
 #treemap {
     max-width: 100%;
+    
 }
 
 .navbar-brand {
@@ -20,6 +21,9 @@
     text-indent: 1%;
     transition: background 1s;
     transition: color 0.5s;
+
+   
+
 }
 
 .treemap_element:hover {
@@ -78,7 +82,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 9999;
+    z-index: 99999;
 }
 
 body {
@@ -152,3 +156,22 @@ body {
     background-color: rgb(207, 205, 205);
 
 }
+
+div.introduction.mt-3.ml-3 {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    
+}
+
+h1 {
+    font-size: 61px;
+    margin-top: 20px;
+}
+
+h1.text-light.text-center {
+    padding-left: 45px;
+}
+
+h1.text-light.text-center.text-capitalize {
+    padding-right:45px;
+}
+
