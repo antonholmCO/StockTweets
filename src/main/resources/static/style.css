@@ -1,114 +1,62 @@
 #treemap {
     max-width: 100%;
+    
+}
+
+.navbar-brand {
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    letter-spacing: 2px;
+    font-size: 27px;
+
+}
+
+
+.treemap_element {
+    background-color: rgb(90, 131, 133);
+    border: 1px solid black;
+    font-size: 100%;
+    line-height: 150%;
+    overflow: hidden;
+
+    text-indent: 1%;
+    transition: background 1s;
+    transition: color 0.5s;
+
+   
+
+}
+
+.treemap_element:hover {
+    background: grey !important;
+    color: white;
 }
 
 .up_10 {
     background-color: rgb(0, 255, 0);
-    border: 1px solid black;
-    font-size: 100%;
-    line-height: 150%;
-    overflow: hidden;
-
-    text-indent: 1%;
-    transition: background 1s;
-    transition: color 0.5s;
+    
 }
 
-.up_10:hover {
-    background: grey !important;
-    color: white;
-}
 
 .up_5 {
     background-color: rgb(15, 133, 15);
-    border: 1px solid black;
-    font-size: 100%;
-    line-height: 150%;
-    overflow: hidden;
-
-    text-indent: 1%;
-    transition: background 1s;
-    transition: color 0.5s;
 }
-
-.up_5:hover {
-    background: grey !important;
-    color: white;
-}
-
-
 
 .up_2 {
     background-color: rgb(72, 107, 72);
-    border: 1px solid black;
-    font-size: 100%;
-    line-height: 150%;
-    overflow: hidden;
-
-    text-indent: 1%;
-    transition: background 1s;
-    transition: color 0.5s;
 }
-
-.up_2:hover {
-    background: grey !important;
-    color: white;
-}
-
-
 
 .down_2 {
     background-color: rgb(100, 60, 60);
-    border: 1px solid black;
-    font-size: 100%;
-    line-height: 150%;
-    overflow: hidden;
-
-    text-indent: 1%;
-    transition: background 1s;
-    transition: color 0.5s;
 }
-
-.down_2:hover {
-    background: grey !important;
-    color: white;
-}
-
-
 
 .down_5 {
     background-color: rgb(141, 19, 19);
-    border: 1px solid black;
-    font-size: 100%;
-    line-height: 150%;
-    overflow: hidden;
-
-    text-indent: 1%;
-    transition: background 1s;
-    transition: color 0.5s;
-}
-
-.down_5:hover {
-    background: grey !important;
-    color: white;
 }
 
 .down_10 {
     background-color: rgb(255, 0, 0);
-    border: 1px solid black;
-    font-size: 100%;
-    line-height: 150%;
-    overflow: hidden;
-
-    text-indent: 1%;
-    transition: background 1s;
-    transition: color 0.5s;
 }
 
-.down_10:hover {
-    background: grey !important;
-    color: white;
-}
 
 .info-window {
     position: absolute;
@@ -124,18 +72,106 @@
     cursor: pointer;
 }
 
+.col {
+    padding: 0;
+}
 
 .overlay {
     width: 100%;
-    height: 90vh;
+    min-height: 99vh;
     position: absolute;
     top: 0;
+    left: 0;
+    z-index: 99999;
 }
 
 body {
     position: relative;
+    overflow-x: hidden;
 }
 
-.info-window-element {
+.twitter-window-element {
+    background-color: rgb(29, 155, 240);
     height: 75vh;
+
+    overflow: scroll;
+    overflow-x: hidden;
+    border-width: 5px;
+    border-style: inset;
+    border-image: linear-gradient(to right, rgb(62, 233, 255), rgb(29, 155, 240)) 1;
 }
+
+.stock-window-element {
+    height: 75vh;
+
+
+}
+
+.twitter-element {
+    transition: .3s transform cubic-bezier(.155, 1.105, .295, 1.12), .3s box-shadow, .3s -webkit-transform cubic-bezier(.155, 1.105, .295, 1.12);
+}
+
+.twitter-element:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, .12), 0 4px 8px rgba(0, 0, 0, .06);
+}
+
+/** Scrollbar*/
+
+/* width */
+::-webkit-scrollbar {
+    width: 20px;
+    margin-right: 2px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: rgb(35, 88, 124);
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: rgb(117, 122, 126);
+
+}
+
+#headingOne.card-header {
+    background-color: rgb(207, 205, 205);
+
+}
+
+#headingTwo.card-header {
+    background-color: rgb(207, 205, 205);
+
+}
+
+#headingThree.card-header {
+    background-color: rgb(207, 205, 205);
+
+}
+
+div.introduction.mt-3.ml-3 {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    
+}
+
+h1 {
+    font-size: 61px;
+    margin-top: 20px;
+}
+
+h1.text-light.text-center {
+    padding-left: 45px;
+}
+
+h1.text-light.text-center.text-capitalize {
+    padding-right:45px;
+}
+
