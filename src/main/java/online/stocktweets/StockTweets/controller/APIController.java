@@ -17,7 +17,7 @@ public class APIController {
         return getDocumentation();
     }
 
-    @GetMapping("/documentation")
+    @GetMapping("/docs")
     public String getDocumentation() {
         return "about_API.html";
     }
