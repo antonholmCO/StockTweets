@@ -14,6 +14,11 @@ public class TweetService {
     private HttpStatus responseCode;
     private final String bearerToken = "Bearer " + PasswordsAndKeys.bearerToken;
 
+    /**
+     * Collection method to get Tweets from external API
+     * @param stockSymbol Stock symbol of company
+     * @return Tweets-object
+     */
     public Tweets getTweets(String stockSymbol) {
         Tweets tweets = getOnlyTweets(stockSymbol);
         populateUsernames(tweets);
@@ -21,6 +26,11 @@ public class TweetService {
         return tweets;
     }
 
+    /**
+     * Gets tweets from external API
+     * @param stockSymbol Stock symbol of company
+     * @return Tweets-object
+     */
     private Tweets getOnlyTweets(String stockSymbol) {
         URI uri = createTweetQuery(stockSymbol);
 
@@ -41,6 +51,10 @@ public class TweetService {
         }
     }
 
+    /**
+     * Requests usernames from Twitter API and sets them for all tweets in tweets objects based on their Twitter author id
+     * @param tweets With author ids
+     */
     private void populateUsernames(Tweets tweets) {
         ArrayList<String> authorIds = new ArrayList<>();
 
@@ -61,28 +75,42 @@ public class TweetService {
         }
     }
 
+    /**
+     * This method creates a JsonObject from a URI, used to reduce duplicate code
+     * @param uri URI-object
+     * @return JsonObject
+     */
     private JsonObject getJsonObject(URI uri) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
+
         headers.set("Authorization", bearerToken);
         headers.set("content-type", "application/json; charset=utf-8");
+
         HttpEntity<String> request = new HttpEntity(headers);
         ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.GET, request, String.class);
 
-        //TODO hanndle response codes
         JsonElement jsonElement = JsonParser.parseString(response.getBody());
         JsonObject jsonObject = jsonElement.getAsJsonObject();
 
         return jsonObject;
     }
 
-
+    /**
+     * This method parses Json strings to objects
+     * @param json Json string
+     * @return Tweets-object
+     */
     private Tweets parseJSON(String json) {
         Gson gson = new Gson();
         return gson.fromJson(json, Tweets.class);
     }
 
-
+    /**
+     * Creates a URI for external API-call
+     * @param stockSymbol
+     * @return URI for API request
+     */
     private URI createTweetQuery(String stockSymbol) {
         StringBuilder strb = new StringBuilder();
         URI uri = null;
@@ -102,6 +130,11 @@ public class TweetService {
         return uri;
     }
 
+    /**
+     * Creates a URI for external API-call
+     * @param authorIdList
+     * @return URI for API request
+     */
     private URI createTweetUserQuery(ArrayList<String> authorIdList) {
         StringBuilder strb = new StringBuilder();
         URI uri = null;

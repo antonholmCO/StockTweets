@@ -12,6 +12,12 @@ import java.net.URISyntaxException;
 public class ExchangeService {
     private RestTemplate restTemplate = new RestTemplate();
 
+    /**
+     * Gets exchange rate on two different currencies, from first parameter input to second parameter input
+     * @param curr1 first currency abbreviation, example USD
+     * @param curr2 second currency abbreviation, example SEK
+     * @return exchange rate for selected currencies
+     */
     public double getExchangeRate(String curr1, String curr2) {
 
         StringBuilder strb = new StringBuilder();

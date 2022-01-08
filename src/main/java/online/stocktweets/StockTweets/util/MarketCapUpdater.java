@@ -12,8 +12,11 @@ public class MarketCapUpdater {
 
     private Timer timer = new Timer();
 
+    /**
+     * Schedules timers at the start of the program to update the market cap text files each day shortly after midnight.
+     */
     public void startTimer() {
-        long delay = dayInMillis - (System.currentTimeMillis() % dayInMillis); //TODO Fixa till
+        long delay = dayInMillis - (System.currentTimeMillis() % dayInMillis);
 
         updateCapOnStart();
 
@@ -23,7 +26,9 @@ public class MarketCapUpdater {
         timer.schedule(new SectorUpdater("energy"), delay+210000, dayInMillis);
     }
 
-
+    /**
+     * Updates all market caps with delays to stay below allowed amount of calls to external API
+     */
     private void updateCapOnStart() {
         Timer timerFirstUpdate = new Timer();
 
@@ -33,6 +38,10 @@ public class MarketCapUpdater {
         timerFirstUpdate.schedule(new SectorUpdater("energy"), 210000);
     }
 
+    /**
+     * Updates market cap for stocks specified in static txt file according to sector
+     * @param sector
+     */
     private void updateMarketCap(String sector) {
         StockService ss = new StockService();
 

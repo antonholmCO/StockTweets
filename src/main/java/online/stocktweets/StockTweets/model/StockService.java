@@ -14,7 +14,13 @@ import java.util.ArrayList;
 
 public class StockService {
 
-    //Input can be company name or stock symbol
+    /**
+     * Performs a call to Finnhub API to get stock-data for a specified company via its stock symbol
+     * @param stock String stock symbol
+     * @return Stock-object
+     * @throws HttpClientErrorException If an error occurs when calling the external API this method throws the http exception
+     * @throws NullPointerException If an error occurs during creation of the Stock-object this method throws this exception
+     */
     public Stock getStock(String stock) throws HttpClientErrorException, NullPointerException {
         URI uri = createSymbolLookupQuery(stock);
 
@@ -39,6 +45,13 @@ public class StockService {
         return stock;
     }
 
+    /**
+     * Creates a list of symbol objects with symbol name and corresponding market cap
+     * @param sector That is predefined, enum sector should contain passed in sector
+     * @return List of symbol objects
+     * @throws HttpClientErrorException If an error occurs when calling the external API this method throws the http exception
+     * @throws NullPointerException If an error occurs during creation of the Stock-object this method throws this exception
+     */
     public ArrayList<Symbol> getSymbolList(String sector) throws HttpClientErrorException, NullPointerException {
         ArrayList<Symbol> symbols = new ArrayList<>();
 
@@ -57,6 +70,11 @@ public class StockService {
         return symbols;
     }
 
+    /**
+     * Makes an external API call to get market cap of stock symbol
+     * @param symbol Stock symbol for company
+     * @return Market cap of company in USD
+     */
     public long getMarketCap(String symbol) {
         long marketCapLong;
 
@@ -74,6 +92,11 @@ public class StockService {
         return marketCapLong;
     }
 
+    /**
+     * Makes a call to the external API to get the current price, open price and percent change for the Stock in question
+     * @param stock Stock-object
+     * @throws HttpClientErrorException If an error occurs when calling the external API an exception will be thrown
+     */
     private void updateStockWithPrice(Stock stock) throws HttpClientErrorException {
         URI uri = createPriceQuery(stock.getSymbol());
 
@@ -87,6 +110,12 @@ public class StockService {
         stock.setOpenPrice(openPrice);
     }
 
+    /**
+     * This method creates a JsonObject from a URI, used to reduce duplicate code
+     * @param uri URI-object
+     * @return JsonObject
+     * @throws HttpClientErrorException If an error occurs when calling the external API an exception will be thrown
+     */
     private JsonObject createJsonObjectFromURI(URI uri) throws HttpClientErrorException {
         RestTemplate restTemplate = new RestTemplate();
 
@@ -98,6 +127,11 @@ public class StockService {
         return jsonObject;
     }
 
+    /**
+     * Creates a URI for external API-call
+     * @param stockName
+     * @return URI for API request
+     */
     private URI createSymbolLookupQuery(String stockName) {
         StringBuilder strb = new StringBuilder();
         URI uri = null;
@@ -115,6 +149,11 @@ public class StockService {
         return uri;
     }
 
+    /**
+     * Creates a URI for external API-call
+     * @param stockSymbol
+     * @return URI for API request
+     */
     private URI createPriceQuery(String stockSymbol) {
         StringBuilder strb = new StringBuilder();
         URI uri = null;
@@ -132,6 +171,11 @@ public class StockService {
         return uri;
     }
 
+    /**
+     * Creates a URI for external API-call
+     * @param stockSymbol
+     * @return URI for API request
+     */
     private URI createMarketCapQuery(String stockSymbol) {
         StringBuilder strb = new StringBuilder();
         URI uri = null;
