@@ -355,26 +355,45 @@ function unsubscribe() {
 // Displays time for stockmarket NYSE and indicates if market is opened or closed
 function startTime() {
     const today = new Date();
+    const opens = new Date();
+    const closes = new Date();
+    opens.setHours(9);
+    let opensTime = opens.getHours();
+    closes.setHours(16);
+    let closesTime = closes.getHours();
+
     let h = today.getHours() - 6;
     let m = today.getMinutes();
     let s = today.getSeconds();
+    let day = today.getDay();
     m = checkTime(m);
     s = checkTime(s);
     document.getElementById('clock').innerHTML = h + ":" + m + ":" + s;
-    let openHours = h + m
-    if (openHours >= 900 && openHours < 1600) {
-        $('#openClose').addClass("bg-success").html('Open')
-        let hasClass = $('#openClose').hasClass("bg-danger")
-        if (hasClass) {
-            $('#openClose').removeClass("bg-danger")
+    
+    if (h >= opensTime && h < closesTime) {
+        
+        if (day === 6 || day === 0) {
+            $('#openClose').addClass("bg-danger").html('Closed')
+            let hasClass = $('#openClose').hasClass("bg-success")
+            if (hasClass) {
+                $('#openClose').removeClass("bg-success")
+            }
+        } else {
+            $('#openClose').addClass("bg-success").html('Open')
+            let hasClass = $('#openClose').hasClass("bg-danger")
+            if (hasClass) {
+                $('#openClose').removeClass("bg-danger")
+            }
         }
-
+        
+        
     } else {
         $('#openClose').addClass("bg-danger").html('Closed')
         let hasClass = $('#openClose').hasClass("bg-success")
         if (hasClass) {
             $('#openClose').removeClass("bg-success")
         }
+        
     }
 
     setTimeout(startTime, 1000);
