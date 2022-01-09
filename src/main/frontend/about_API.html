@@ -31,7 +31,7 @@
         </ul>
       </div>
     </nav>
-    <main class="container">
+    <main class="container mb-5">
       <div class="introduction mt-3 ml-3">
         <h1 class="font-weight-bold text-center">API Documentation <span class="badge bg-success">V 1.0</span></h1>
         <h2 class="ml-1 mt-5 font-weight-bold">Endpoints</p>
@@ -42,7 +42,7 @@
           <h2 class="accordion-header" id="flush-headingOne">
             <button class="accordion-button collapsed btn-light" type="button" data-bs-toggle="collapse"
               data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-              <span class=" bg-dark text-light p-3 rounded"><b>GET /symbols/{sector}</b></span>
+              <span class=" bg-dark text-light p-3 rounded"><b><span class="text-success">GET</span> /symbols/{sector}</b></span>
             </button>
           </h2>
           <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne"
@@ -78,9 +78,27 @@
 
                 </div>
 
-                <!--Todo: process Response Object and its headers, schema, examples -->
+                <h3 class="field-label">Example request</h3>
+                <div class="example-data-content-type"><p class="bg-secondary text-light rounded p-2">cURL</p></div>
+                <pre class="example bg-light rounded"><code>
+  curl 'http://stocktweets.rocks/api/v1/symbols/tech'
+                                            </code></pre>
 
-                <h3 class="field-label">Example data</h3>
+                <div class="example-data-content-type">
+                  <p class="bg-secondary text-light rounded p-2">AJAX</p>
+                </div>
+                <pre class="example bg-light rounded"><code>
+$.ajax({
+  url: `http://stocktweets.rocks/api/v1/symbols/tech`,
+  headers: { "Accept": "application/json" }
+})
+  .done(function (data) {
+    console.log(data)
+})
+                                                            </code></pre>
+                            
+
+                <h3 class="field-label">Example response</h3>
                 <div class="example-data-content-type">Content-Type: application/json</div>
                 <pre class="example bg-light rounded"><code>
 [ 
@@ -123,7 +141,7 @@
           <h2 class="accordion-header" id="flush-headingTwo">
             <button class="accordion-button collapsed btn-light" type="button" data-bs-toggle="collapse"
               data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-              <span class=" bg-dark text-light p-3 rounded"><b>GET /stocktweet/{stock_symbol}</b></span>
+              <span class=" bg-dark text-light p-3 rounded"><b><span class="text-success">GET</span> /stocktweet/{stock_symbol}</b></span>
             </button>
           </h2>
           <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo"
@@ -149,9 +167,29 @@
 
                 </div>
 
-                <!--Todo: process Response Object and its headers, schema, examples -->
+                <h3 class="field-label">Example request</h3>
+                <div class="example-data-content-type">
+                  <p class="bg-secondary text-light rounded p-2">cURL</p>
+                </div>
+                <pre class="example bg-light rounded"><code>
+curl 'http://stocktweets.rocks/api/v1/stocktweet/AAPL'
+                                                            </code></pre>
 
-                <h3 class="field-label">Example data</h3>
+
+                <div class="example-data-content-type">
+                  <p class="bg-secondary text-light rounded p-2">AJAX</p>
+                </div>
+                <pre class="example bg-light rounded"><code>
+  $.ajax({
+    url: `http://stocktweets.rocks/api/v1/stocktweet/AAPL`,
+    headers: { "Accept": "application/json" }
+  })
+    .done(function (data) {
+      console.log(data)
+    })
+                  </code></pre>
+
+                <h3 class="field-label">Example response</h3>
                 <div class="example-data-content-type">Content-Type: application/json</div>
                 <pre class="example bg-ligt rounded"><code>
 {
