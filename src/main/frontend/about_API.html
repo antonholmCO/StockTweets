@@ -60,7 +60,9 @@
 
                 <h3 class="field-label">Path parameters</h3>
                 <div class="field-items">
-                  <div class="param">sector (required)</div>
+
+                  <div class="param">
+                    <p><b>sector</b> <span class="text-danger">(required)</span></p></div>
 
                   <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; Sector that company is
                     established and active in. Currently accepted sectors: &#x27;tech&#x27;, &#x27;medical&#x27;,
@@ -85,7 +87,7 @@
                                             </code></pre>
 
                 <div class="example-data-content-type">
-                  <p class="bg-secondary text-light rounded p-2">AJAX</p>
+                  <p class="bg-secondary text-light rounded p-2">ajax</p>
                 </div>
                 <pre class="example bg-light rounded"><code>
 $.ajax({
@@ -99,7 +101,7 @@ $.ajax({
                             
 
                 <h3 class="field-label">Example response</h3>
-                <div class="example-data-content-type">Content-Type: application/json</div>
+                <div class="example-data-content-type bg-secondary text-light rounded p-2">Content-Type: application/json</div>
                 <pre class="example bg-light rounded"><code>
 [ 
     {
@@ -156,7 +158,11 @@ $.ajax({
 
                 <h3 class="field-label">Path parameters</h3>
                 <div class="field-items">
-                  <div class="param">stock_symbol (required)</div>
+                  <div class="param">
+                    <p>
+                    <b>stock_symbol</b> <span class="text-danger">(required)</span>
+                    </p>
+                  </div>
                   <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; Symbol or name of a
                     company
                     listed on the US stock market </div>
@@ -190,7 +196,7 @@ curl 'http://stocktweets.rocks/api/v1/stocktweet/AAPL'
                   </code></pre>
 
                 <h3 class="field-label">Example response</h3>
-                <div class="example-data-content-type">Content-Type: application/json</div>
+                <div class="example-data-content-type bg-secondary text-light rounded p-2">Content-Type: application/json</div>
                 <pre class="example bg-ligt rounded"><code>
 {
     "stock": {
