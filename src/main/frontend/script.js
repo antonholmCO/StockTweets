@@ -1,22 +1,26 @@
-let scrollText = ''
-let setMarket = 'medical'
+// Assign value to setMarket = market sector that populates treemap
+let setMarket = 'medial'
+
+// Object to store all symbols recived from http://stocktweets.rocks/api/v1/symbols/${market[sector]} when page is loaded
 let big_data = {
     'tech': {},
     'medical': {}
 }
-const sort_list = []
-let newText = ''
 
+// Array used to store all symbols, marketcap, market percentage share to order and filter for treemap
+const sort_list = []
+
+// Button group to toggle between markets
 const buttonElem = `<div class="btn-group mb-2 m-auto" role="group" aria-label="Basic example">
-                <button type="button" onclick="updateTreemap('tech')" class="btn btn-primary">Tech</button>
-                <button type="button" onclick="updateTreemap('medical')" class="btn btn-primary">Medical</button>
-                <button type="button" class="btn btn-primary disabled">Disabled</button>
+                <button type="button" onclick="updateTreemap('tech')" class="btn btn-dark border-light">Tech</button>
+                <button type="button" onclick="updateTreemap('medical')" class="btn btn-dark border-light">Medical</button>
             </div>`
 
-// Websocket
+// Websocket connection to finnhub
 const socket = new WebSocket('wss://ws.finnhub.io?token=c70ab7qad3id7ammkm3g');
 
-// Document ready
+
+// Document ready, request symbols, create element buttongroup on index and timeout function to delay build of treemap until symbols are recieved 
 $(document).ready(function () {
     requestSymbols()
     $('#buttonDIV').append(buttonElem);
@@ -25,59 +29,62 @@ $(document).ready(function () {
 
 });
 
-function requestSymbols() {
 
+// Runs on page load
+function requestSymbols() {
+    // Markets to request
     const market = ['tech', 'medical']
     let total_market_cap = 0
 
     // Get symbols
     for (let sector in market) {
-        total_market_cap = total_market_cap - total_market_cap
+        // Set total marketcap to zero each iteration
+        let total_market_cap = 0
+        
         $.ajax({
             url: `http://stocktweets.rocks/api/v1/symbols/${market[sector]}`,
             headers: { "Accept": "application/json" }
         })
             .done(function (data) {
 
-                // Create object of all symbols and marketcap
+                // Add marketcap to total marketcap for each stock in market sector
+                // Create big_data object of all symbols and marketcap 
+                
                 for (let stock in data) {
                     total_market_cap = total_market_cap + data[stock]['marketcap'];
-
                     big_data[market[sector]][data[stock]['symbol']] = {
                         'marketcap': data[stock]['marketcap']
                     }
                 }
-
                 
+                // For each stock requested, calculate marketshare in % and assign boolean to see if it should be in treemap
                 for (let symbol in data) {
                     let market_share = data[symbol]['marketcap'] / total_market_cap
-                    let market_percentage = (Math.round(market_share * 100)).toFixed(5);
-
                     sort_list.push({ 'marketSector': market[sector], 'name': data[symbol]['symbol'], 'marketcap': data[symbol]['marketcap'], 'marketPercentage': market_share, 'inList': false })
                 }
 
-
+                
             })
-
-    }
-
-    
+        delete total_market_cap
+    }   
 
 };
 
+// function to build treemap, runs once at pageload and when market sector buttons are clicked in button group 
 function updateTreemap(marketSector) {
     
-    if ($(`.treeMapRows`)) {
-        $(`#treemap .treeMapRows`).remove()
-    }
     
     if (!marketSector) {
         marketSector = 'tech'
     }
     
-    // Sort and order by market cap for treemap
+    // Sort and order sort_list array by market cap for treemap, biggest marketcap at top
     if (marketSector != setMarket) {
         setMarket = marketSector
+
+        if ($(`.treeMapRows`)) {
+            $(`#treemap .treeMapRows`).remove()
+        }
 
         function compare(a, b) {
             if (a.marketcap > b.marketcap) {
@@ -93,58 +100,49 @@ function updateTreemap(marketSector) {
 
 
         // creates elements for each coin
-        let total_cap = 0
-        let elementCreator = ''
-
-        let treeMapWidth = $('#treemap').width();
-        let treeMapHeight = $('#treemap').height();
-        let totalArea = treeMapWidth * treeMapHeight
-        let width = 150
-        let height = 150
-        let row = 0
-        let maxWidth = 500
-        let before = {
-            'width': width,
-            'height': 0,
-            'row': 1000
-        }
-        let minHeight = 100
-        boxes = ''
         
-        // Create boxes
+        let elementCreator = ''
+        let width = 0
+        let height = 0
+        
+        // Create boxes based on % size 
         let targetArray = [0.25, 0.25, 0.2, 0.15, 0.15]
         let layout = [0.25, 0.25, 0.2, 0.15, 0.15]
-
-        let myList = [{ '0': [] }, { '1': [] }, { '2': [] }, { '3': [] }, { '4': [] }]
-        
+        // Stocks are sorted into listForTreemap, each object in list has a size to fill and stocks are filtered to fill each element based on market percentage
+        let listForTreemap = [{ '0': [] }, { '1': [] }, { '2': [] }, { '3': [] }, { '4': [] }]
+        // Creates a temporary list to sort stocks for treemap so sort_list can be used for other purposes if necessary
         temporaryList = Array.from(sort_list)
+
+        // Toggle boolean
         for (let inlist in temporaryList) {
             temporaryList[inlist]['inList'] = false
         }
-
+        let money = 0
+        // For all sizes in target array
         for (let i in targetArray) {
 
+            // Filter all stocks for size...
             for (let b in temporaryList) {
-
+                // only if they are in right market sector
                 if (temporaryList[b]['marketSector'] === setMarket) {
 
+                    // If element is to big to fit, continue
                     if (targetArray[i] - temporaryList[b]['marketPercentage'] <= 0) {
                         continue;
                     } else if (temporaryList[b]['inList'] === false) {
-                        myList[i][i].push(temporaryList[b])
+                        // If it fits, push to list, subtract percentage from targetarray and toggle boolean
+                        listForTreemap[i][i].push(temporaryList[b])
                         targetArray[i] = targetArray[i] - temporaryList[b]['marketPercentage']
-                        
                         temporaryList[b]['inList'] = true
                     }
 
-                } else {
-                    $(`#treemap #${temporaryList[b]['name']}`).remove()
-                }
+                } 
 
 
             }
         }
 
+        // For each size in target array
         for (let ind in targetArray) {
 
             let elemArea = layout[ind]
@@ -154,28 +152,27 @@ function updateTreemap(marketSector) {
             let sharOfArea = 0
             let boxes = ''
 
-            for (let box in myList[ind]) {
+            // For each object int listForTreemap
+            for (let box in listForTreemap[ind]) {
                 sharOfArea = 0
 
-                for (let totalElemShare in myList[ind][box]) {
-                    let percentage = myList[ind][box][totalElemShare]['marketPercentage']
+                // For each stock in objects array assign a shareOfArea
+                for (let totalElemShare in listForTreemap[ind][box]) {
+                    let percentage = listForTreemap[ind][box][totalElemShare]['marketPercentage']
                     sharOfArea = sharOfArea + percentage
                 }
 
                 
-
-                for (let item in myList[ind][box]) {
+                // Create element, height is preset from targetArray percentage, widht is calculated as percentage of share from total marketcap
+                for (let item in listForTreemap[ind][box]) {
                     
                     height = elemHeight
-                    width = (myList[ind][box][item]['marketPercentage'] / sharOfArea) * 100
-
-                    // Sets class on element based on stockprice increased or decreased
-
-                    //Creates element and appends to treemap element
-
-                    let text = `<div id="${myList[ind][box][item]['name']}" class="treemap_element stock-element" style="width:${width}%; height:${height}px;" onmouseover="mouse_over(this.id)" onmouseout="mouse_out()" onclick="openModal(this.id)">
-                    <h3 class="text-capitalize">${myList[ind][box][item]['name']}</h3><p id="${myList[ind][box][item]['name']}price"></p><br></div>`
-                    console.log(myList[ind][box][item])
+                    width = (listForTreemap[ind][box][item]['marketPercentage'] / sharOfArea) * 100
+                    // HTML code for each element
+                    let text = `<div id="${listForTreemap[ind][box][item]['name']}" class="treemap_element stock-element" style="width:${width}%; height:${height}px;" onmouseover="mouse_over(this.id)" onmouseout="mouse_out()" onclick="openModal(this.id)">
+                    <h3 class="text-capitalize">${listForTreemap[ind][box][item]['name']}</h3><p><strong id="${listForTreemap[ind][box][item]['name']}price" class="text-light">Market Closed</strong></p><br></div>`
+                    
+                    // Add element to row
                     row = row + text
 
                 }
@@ -183,7 +180,7 @@ function updateTreemap(marketSector) {
                 
 
             }
-
+            // One row = one box, five boxes represent 100% of treemap 
             boxes = `<div class="treeMapRows row m-auto" style="width:${elemWidth}; height:${elemHeight}px;">${row}</div>`
             elementCreator = elementCreator + boxes
 
@@ -191,29 +188,39 @@ function updateTreemap(marketSector) {
                 
             
         }
+
         $(elementCreator).appendTo("#treemap");
+
+    } else {
+        // If allready on the requested view
+        console.log('already on medical')
     }
 
 
 };
 
-
+// On hover element in treemap open extra info overlay
 function mouse_over(element_id) {
-
-    let new_element = `<div class="info-window"><h3 class="text-capitalize">${element_id}</h3> <p class="text-capitalize">Name: ${element_id}</p> <p>MarketCap: $${big_data[setMarket][element_id]['marketcap']}</p><p>Change: 100%</p></div>`
+    let s = big_data[setMarket][element_id]['marketcap']
+    let marketCapOutput = s.toLocaleString()
+    let new_element = `<div class="info-window"><h3 class="text-capitalize">${element_id}</h3> <p class="text-capitalize"><p>MarketCap: $${marketCapOutput}</p></div>`
     let info_window = $('#' + element_id)
     info_window.append(new_element);
 
 }
 
+// Mouse out from element close overlay
 function mouse_out() {
     let info_window = $('.info-window')
     info_window.remove();
 
 }
 
-function openModal(stock) {
 
+// On click treemap element. Request individual stock and twitter data
+function openModal(stock) {
+    let loaderElem = `<div class="loader"></div>`
+    $(`#treemap`).append(loaderElem)
     $.ajax({
         url: `http://stocktweets.rocks/api/v1/stocktweet/${stock}`,
         headers: { "Accept": "application/json" }
@@ -230,6 +237,7 @@ function openModal(stock) {
 
             let tweetArray = []
 
+            // Create twitter element for each tweet
             for (let tweet in data['tweets']['data']) {
 
                 let tweets = `<li class="bg-light p-1 rounded twitter-element">
@@ -238,6 +246,18 @@ function openModal(stock) {
                 <a class="text-decoration-none text-dark" href="https://twitter.com/${data['tweets']['data'][tweet]['authorName']}/status/${data['tweets']['data'][tweet]['id']}"><p>${data['tweets']['data'][tweet]['text']}</p></a></li>`
                 tweetArray.push(tweets)
             }
+
+            
+            // Display stock info
+            let marketCapOutput = marketcap.toLocaleString()
+            let change = data['stock']['percentChange']
+            
+            if (change > 0) {
+                text_color = 'text-success'
+            } else {
+                text_color = 'text-danger'
+            }
+
             let new_element = `<div id="info-overlay-window" class="overlay bg-dark">
                 <div class="row">
                 <div class="col-lg-6 bg-dark stock-window-element border border-light border-5"><h1 class="text-light text-center text-capitalize">${data['stock']['companyName']}</h1>
@@ -245,9 +265,9 @@ function openModal(stock) {
                 <ul class="list-unstyled text-light pt-4 mt-3 text-center">
                     <li><h3 class="border border-light p-3">Price in USD: $${data['stock']['priceUSD']}</h3></li>
                     <li><h3 class="border border-light p-3">Price in SEK: ${data['stock']['priceSEK']}sek</h3></li>
-                    <li><h3 class="border border-light p-3">Marketcap: $${marketcap}</h3></li>
+                    <li><h3 class="border border-light p-3">Marketcap: $${marketCapOutput}</h3></li>
                     
-                    <li><h3 class="border border-light p-3">Change: ${data['stock']['percentChange']}%</h3></li>
+                    <li><h3 class="border border-light p-3 ${text_color}">Change: ${change}%</h3></li>
                     <li><h3 class="border border-light p-3">Symbol: ${data['stock']['symbol']}</h3></li>
                 </ul>
                </div>
@@ -267,20 +287,24 @@ function openModal(stock) {
                 </div>`
 
             $('body').append(new_element);
+            $('html, body').animate({ scrollTop: 0 }, 'fast');
         })
+
+    
 }
 
+// Closes overlay with close button
 function close_overlay() {
     let element = $('#info-overlay-window')
     element.remove();
-
+    $(`.loader`).remove()
 }
 
 
 
 
 
-// Connection opened -> Subscribe
+// Connection opened -> Subscribe to stream
 socket.addEventListener('open', function (event) {
     let count = 0
     while (count < 49) {
@@ -297,57 +321,38 @@ socket.addEventListener('open', function (event) {
 // Listen for messages
 socket.addEventListener('message', function (event) {
 
-    
     var msg = JSON.parse(event.data);
-    for (let symbol in msg['data'])
-        newText = `${msg['data'][symbol]['s']}:  ${msg['data'][symbol]['p']}`
-    scrollText = scrollText + newText
-
-    //$('#scroll-text').text(scrollText)
-
-    //Update treemap elements
+    
+    //Update treemap elements on message
 
     for (let symbol in msg['data']) {
         lastPrice = { 'symbol': msg['data'][symbol]['s'], 'lastprice': msg['data'][symbol]['p'] }
 
-
+        // Assign color to treemap element based on stock price change
         if (parseInt(lastPrice['lastprice']) > parseInt($(`#${msg['data'][symbol]['s']}price`).text())) {
-
             $(`#${lastPrice['symbol']}`).css("background-color", "green")
-
-
         } else {
-
             $(`#${lastPrice['symbol']}`).css("background-color", "red")
-
         }
-
-
         $(`#${lastPrice['symbol']}price`).html(`$${lastPrice['lastprice']}`)
     }
 
 });
 
 
-
+// Can be used to unsubscribe webstream, NOT used in this implementation
 function unsubscribe() {
-    
     if (sort_list.length > 1) {
         // Unsubscribe
         for (let symbol in sort_list) {
-            socket.send(JSON.stringify({ 'type': 'unsubscribe', 'symbol': sort_list[symbol]['name'] }))
-            
+            socket.send(JSON.stringify({ 'type': 'unsubscribe', 'symbol': sort_list[symbol]['name'] })) 
         }
-
-        big_data = {}
-        sort_list = []
     }
 }
 
 
 
-// TIME
-
+// Displays time for stockmarket NYSE and indicates if market is opened or closed
 function startTime() {
     const today = new Date();
     let h = today.getHours() - 6;
