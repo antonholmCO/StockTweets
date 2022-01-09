@@ -10,18 +10,11 @@ public class Stock {
     private double o;
     private double percentChange;
 
-    private double calculateDummySek(double priceUSD) {
-        double exchangeRate = 9.08;
-        double sek = priceUSD * exchangeRate;
-
-        BigDecimal bigDecimal = BigDecimal.valueOf(sek);
-        bigDecimal = bigDecimal.setScale(2, RoundingMode.HALF_UP);
-
-        sek = bigDecimal.doubleValue();
-
-        return sek;
-    }
-
+    /**
+     * Calculates price in SEK based on exchange rate fetched from external API
+     * @param priceUSD price in USD
+     * @return price in SEK
+     */
     private double calculateSEK(double priceUSD) {
         double exchangeRate = ExchangeRate.getExchangeRateUSDToSEK();
         double sek = priceUSD * exchangeRate;
@@ -32,7 +25,6 @@ public class Stock {
         sek = bigDecimal.doubleValue();
 
         return sek;
-
     }
 
     public String getCompanyName() {

@@ -10,6 +10,10 @@ public class ExchangeRate {
     private static long lastExchangeRateCallMillis = 0;
     private static double rate = 0.0;
 
+    /**
+     * Requests external API for current exchange rate from USD to SEK if rate has not been requests in the recent 12 hours
+     * @return exchange rate
+     */
     public static double getExchangeRateUSDToSEK() {
         long timeSinceLastExchangeRateCall = System.currentTimeMillis() - lastExchangeRateCallMillis;
 

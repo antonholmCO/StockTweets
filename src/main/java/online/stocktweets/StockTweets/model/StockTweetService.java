@@ -15,6 +15,11 @@ public class StockTweetService {
         ts = new TweetService();
    }
 
+    /**
+     * Top-level method to call external APIs to get data and combine into StockTweets object, creates StockService and TweetService instances
+     * @param symbol Company stock symbol
+     * @return StockTweets-object
+     */
    public StockTweets buildStockTweets(String symbol) {
         try {
             Stock stock = ss.getStock(symbol);
