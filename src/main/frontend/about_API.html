@@ -41,7 +41,7 @@
               <div class="card">
                 <div class="card-header" id="headingOne">
                   <h5 class="mb-0">
-                    <button class="btn btn-link text-light bg-dark text-decoration-none" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    <button class="btn btn-link text-decoration-none text-light bg-dark" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                       GET /symbols/{sector}
                     </button>
                   </h5>
@@ -51,21 +51,21 @@
                   <div class="card-body">
 
                     <div class="method"><a name="getSymbols"></a>
-                      <div class="method-summary">Retrieve array of symbols and corresponding market caps (<span class="nickname">getSymbols</span>)</div>
-                      <div class="method-notes">Returns an array of stock symbols and corresponding market caps for a pre defined list of popular companies in the requested sector</div>
+                      <div class="method-summary font-italic">Retrieve array of symbols and corresponding market caps (<span class="nickname">getSymbols</span>)</div>
+                      <div class="method-notes font-italic">Returns an array of stock symbols and corresponding market caps for a pre-defined list of popular companies in the requested sector.</div>
                   
-                      <h3 class="field-label">Path parameters</h3>
+                      <h3 class="field-label mt-4">Path parameters</h3>
                       <div class="field-items">
                         <div class="param">sector (required)</div>
                         
-                              <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; Sector that company is established and active in. Currently accepted sectors: &#x27;tech&#x27;, &#x27;medical&#x27;, &#x27;finance&#x27; and &#x27;energy&#x27;. </div>    </div>  <!-- field-items -->
+                              <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; Sector that company is established and active in. Currently accepted sectors: <b>&#x27;tech&#x27;</b>, <b>&#x27;medical&#x27;</b>,  <b>&#x27;finance&#x27;</b> and <b>&#x27;energy&#x27;</b>. </div>    </div>  <!-- field-items -->
                   
                   
                   
                   
                   
                   
-                      <h3 class="field-label">Return type</h3>
+                      <h3 class="field-label mt-5">Return type</h3>
                       <div class="return-type">
                         <p>List of symbols</p>
                         
@@ -73,7 +73,7 @@
                   
                       <!--Todo: process Response Object and its headers, schema, examples -->
                   
-                      <h3 class="field-label">Example data</h3>
+                      <h3 class="field-label mt-5">Example data</h3>
                       <div class="example-data-content-type">Content-Type: application/json</div>
                       <pre class="example"><code>[ 
   {
@@ -85,21 +85,21 @@
     "marketcap": 1827388000000
   } 
 ]</code></pre>
-                      <h3 class="field-label">Produces</h3>
+                      <h3 class="field-label mt-4">Produces</h3>
                       This API call produces the following media types according to the <span class="header">Accept</span> request header;
                       the media type will be conveyed by the <span class="header">Content-Type</span> response header.
                       <ul>
                         <li><code>application/json</code></li>
                       </ul>
                   
-                      <h3 class="field-label">Responses</h3>
-                      <h4 class="field-label">200</h4>
+                      <h3 class="field-label mt-4">Responses</h3>
+                      <h4 class="field-label mt-3"> <em>200</em></h4>
                       List of symbols with market cap
                           
-                      <h4 class="field-label">400</h4>
+                      <h4 class="field-label mt-3"><em>400</em></h4>
                       Sector doesn&#x27;t exist
                           <a href="#"></a>
-                      <h4 class="field-label">429</h4>
+                      <h4 class="field-label mt-3"><em>429</em></h4>
                       Too many backend API-requests, try again soon
                           <a href="#"></a>
                     </div> <!-- method -->
@@ -109,7 +109,7 @@
               <div class="card">
                 <div class="card-header" id="headingTwo">
                   <h5 class="mb-0">
-                    <button class="btn btn-link text-light bg-dark text-decoration-none" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    <button class="btn btn-link text-decoration-none text-light bg-dark" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                       GET /stocktweet/{stock_symbol}
                     </button>
                   </h5>
@@ -117,21 +117,21 @@
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
                   <div class="card-body">
                     <div class="method"><a name="getStockTweets"></a>
-                      <div class="method-summary">Retrieve stock and tweets (<span class="nickname">getStockTweet</span>)</div>
-                      <div class="method-notes">Returns stock information combined with an array of associated tweets</div>
+                      <div class="method-summary font-italic">Retrieve stock and tweets (<span class="nickname">getStockTweet</span>)</div>
+                      <div class="method-notes font-italic">Returns stock information combined with an array of associated tweets</div>
                   
-                      <h3 class="field-label">Path parameters</h3>
+                      <h3 class="field-label mt-4">Path parameters</h3>
                       <div class="field-items">
                         <div class="param">stock_symbol (required)</div>
                         <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; Symbol or name of a company listed on the US stock market </div>    </div>  <!-- field-items -->
-                      <h3 class="field-label">Return type</h3>
+                      <h3 class="field-label mt-5">Return type</h3>
                       <div class="return-type">
                         <p>StockTweet</p>
                       </div>
                   
                       <!--Todo: process Response Object and its headers, schema, examples -->
                   
-                      <h3 class="field-label">Example data</h3>
+                      <h3 class="field-label mt-5">Example data</h3>
                       <div class="example-data-content-type">Content-Type: application/json</div>
                       <pre class="example"><code>{
   "stock": {
@@ -158,20 +158,20 @@
     ]
   }
 }</code></pre>  
-                      <h3 class="field-label">Produces</h3>
+                      <h3 class="field-label mt-5">Produces</h3>
                       This API call produces the following media types according to the <span class="header">Accept</span> request header;
                       the media type will be conveyed by the <span class="header">Content-Type</span> response header.
                       <ul>
                         <li><code>application/json</code></li>
                       </ul>
                   
-                      <h3 class="field-label">Responses</h3>
-                      <h4 class="field-label">200</h4>
+                      <h3 class="field-label mt-5">Responses</h3>
+                      <h4 class="field-label mt-3"><em>200</em></h4>
                       Stock and list of tweets
-                      <h4 class="field-label">429</h4>
+                      <h4 class="field-label mt-3"><em>429</em></h4>
                       Too many backend API-requests, try again soon
                           <a href="#"></a>
-                      <h4 class="field-label">500</h4>
+                      <h4 class="field-label mt-3"><em>500</em></h4>
                       Internal error
                           <a href="#"></a>
                     </div> <!-- method -->
