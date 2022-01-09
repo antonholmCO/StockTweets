@@ -33,7 +33,16 @@
     </nav>
     <main class="container mb-5">
       <div class="introduction mt-3 ml-3">
-        <h1 class="font-weight-bold text-center">API Documentation <span class="badge bg-success">V 1.0</span></h1>
+        <h1 class="font-weight-bold text-center mb-3">API Documentation <span class="badge bg-success">V 1.0</span></h1>
+
+        <div class="col-lg-6">
+          <h2>StockTweets API</h2>
+          
+          <p>This is the API-documentation for StockTweets API. The API is open for anyone to use and does not require
+          authentication. To access the API please use the base url http://stocktweets.rocks/api/v1/ with the corresponding
+          endpoint you want to use.</p>
+
+        </div>
         <h2 class="ml-1 mt-5 font-weight-bold">Endpoints</p>
       </div>
 
@@ -235,6 +244,8 @@ curl 'http://stocktweets.rocks/api/v1/stocktweet/AAPL'
                 <h3 class="field-label">Responses</h3>
                 <h4 class="field-label">200</h4>
                 Stock and list of tweets
+                <h4 class="field-label">400</h4>
+                Symbol doesn't exist
                 <h4 class="field-label">429</h4>
                 Too many backend API-requests, try again soon
                 <a href="#"></a>

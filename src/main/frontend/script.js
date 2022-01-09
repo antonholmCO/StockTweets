@@ -1,5 +1,5 @@
 // Assign value to setMarket = market sector that populates treemap
-let setMarket = 'medial'
+let setMarket = 'medical'
 
 // Object to store all symbols recived from http://stocktweets.rocks/api/v1/symbols/${market[sector]} when page is loaded
 let big_data = {
@@ -322,7 +322,7 @@ socket.addEventListener('open', function (event) {
 socket.addEventListener('message', function (event) {
 
     var msg = JSON.parse(event.data);
-    
+    console.log(msg)
     //Update treemap elements on message
 
     for (let symbol in msg['data']) {
