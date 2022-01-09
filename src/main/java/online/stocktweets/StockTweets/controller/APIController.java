@@ -4,6 +4,7 @@ import online.stocktweets.StockTweets.model.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Controller
@@ -37,8 +38,8 @@ public class APIController {
      */
     @GetMapping("/symbols/{sector}")
     @ResponseBody
-    public List<?> getSymbols(@PathVariable String sector) {
-        return new StockService().getSymbolList(sector);
+    public List<?> getSymbols(@PathVariable String sector, @RequestHeader("accept") String acceptHeader) {
+        return new StockService().getSymbolList(sector, acceptHeader);
     }
 
     /**
@@ -48,8 +49,8 @@ public class APIController {
      */
     @GetMapping("/stocktweet/{symbol}")
     @ResponseBody
-    public StockTweets getStockTweets(@PathVariable String symbol) {
-        return new StockTweetService().buildStockTweets(symbol);
+    public StockTweets getStockTweets(@PathVariable String symbol, @RequestHeader("accept") String acceptHeader) {
+        return new StockTweetService().buildStockTweets(symbol, acceptHeader);
     }
 }
 
