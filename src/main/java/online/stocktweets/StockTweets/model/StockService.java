@@ -21,7 +21,7 @@ public class StockService {
      * @throws HttpClientErrorException If an error occurs when calling the external API this method throws the http exception
      * @throws NullPointerException If an error occurs during creation of the Stock-object this method throws this exception
      */
-    public Stock getStock(String stock) throws HttpClientErrorException, NullPointerException {
+    public Stock getStock(String stock) throws HttpClientErrorException, NullPointerException, IndexOutOfBoundsException {
         URI uri = createSymbolLookupQuery(stock);
 
         JsonObject jsonObject = createJsonObjectFromURI(uri);

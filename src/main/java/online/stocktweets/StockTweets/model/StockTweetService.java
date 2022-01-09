@@ -36,6 +36,8 @@ public class StockTweetService {
             throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Too many backend API-requests, try again soon");
         } catch (NullPointerException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Error");
+        } catch (IndexOutOfBoundsException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bad request, please check your search-term");
         }
    }
 }
