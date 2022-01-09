@@ -18,18 +18,10 @@ public class StockTweetService {
     /**
      * Top-level method to call external APIs to get data and combine into StockTweets object, creates StockService and TweetService instances
      * @param symbol Company stock symbol
-     * @param acceptHeader Value for accept header
      * @return StockTweets-object
      */
-   public StockTweets buildStockTweets(String symbol, String acceptHeader) {
+   public StockTweets buildStockTweets(String symbol) {
         try {
-
-            if(!(acceptHeader.contains("application/json") || acceptHeader.contains("text"))) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Only json return type supported");
-            }
-
-            if(symbol.length() > 30) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bad request, your search string was too long");
-
             Stock stock = ss.getStock(symbol);
 
             Utils.startMeasureTime();
@@ -42,10 +34,8 @@ public class StockTweetService {
 
         } catch (HttpClientErrorException e) {
             throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Too many backend API-requests, try again soon");
-        } catch (IndexOutOfBoundsException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Stock not found");
         } catch (NullPointerException e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Error");
         }
    }
 }

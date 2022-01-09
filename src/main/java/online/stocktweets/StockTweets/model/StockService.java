@@ -21,7 +21,7 @@ public class StockService {
      * @throws HttpClientErrorException If an error occurs when calling the external API this method throws the http exception
      * @throws NullPointerException If an error occurs during creation of the Stock-object this method throws this exception
      */
-    public Stock getStock(String stock) throws HttpClientErrorException, NullPointerException, IndexOutOfBoundsException {
+    public Stock getStock(String stock) throws HttpClientErrorException, NullPointerException {
         URI uri = createSymbolLookupQuery(stock);
 
         JsonObject jsonObject = createJsonObjectFromURI(uri);
@@ -48,17 +48,12 @@ public class StockService {
     /**
      * Creates a list of symbol objects with symbol name and corresponding market cap
      * @param sector That is predefined, enum sector should contain passed in sector
-     * @param acceptHeader Value for accept header
      * @return List of symbol objects
      * @throws HttpClientErrorException If an error occurs when calling the external API this method throws the http exception
      * @throws NullPointerException If an error occurs during creation of the Stock-object this method throws this exception
      */
-    public ArrayList<Symbol> getSymbolList(String sector, String acceptHeader) throws HttpClientErrorException, NullPointerException {
+    public ArrayList<Symbol> getSymbolList(String sector) throws HttpClientErrorException, NullPointerException {
         ArrayList<Symbol> symbols = new ArrayList<>();
-
-        if(!(acceptHeader.contains("application/json") || acceptHeader.contains("text"))) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Only json return type supported");
-        }
 
         if (Sector.SectorVerification.isValidSector(sector.toUpperCase())) {
             ArrayList<String> symbolsStr = Utils.readTxtFile("src/main/resources/presetSectors/"+ sector +"StockList.txt");

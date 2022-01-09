@@ -7,14 +7,6 @@
     padding: 0;
 }
 
-.navbar-brand {
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    letter-spacing: 2px;
-    font-size: 27px;
-
-}
-
-
 .treemap_element {
     background-color: rgb(90, 131, 133);
     border: 1px solid black;

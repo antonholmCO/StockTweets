@@ -191,9 +191,6 @@ function updateTreemap(marketSector) {
 
         $(elementCreator).appendTo("#treemap");
 
-    } else {
-        // If allready on the requested view
-        console.log('already on medical')
     }
 
 

@@ -13,5 +13,4 @@ public class WebController {
     public String getIndex() {
         return "index.html";
     }
-
 }
