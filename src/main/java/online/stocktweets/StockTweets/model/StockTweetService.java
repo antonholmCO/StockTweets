@@ -18,6 +18,7 @@ public class StockTweetService {
     /**
      * Top-level method to call external APIs to get data and combine into StockTweets object, creates StockService and TweetService instances
      * @param symbol Company stock symbol
+     * @param acceptHeader Value for accept header
      * @return StockTweets-object
      */
    public StockTweets buildStockTweets(String symbol, String acceptHeader) {

@@ -3,8 +3,6 @@ package online.stocktweets.StockTweets.controller;
 import online.stocktweets.StockTweets.model.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Controller
@@ -34,6 +32,7 @@ public class APIController {
     /**
      * Get mapping for endpoint symbols
      * @param sector Stock market sector
+     * @param acceptHeader Value for accept header
      * @return Json file with stock symbols for specified sector
      */
     @GetMapping("/symbols/{sector}")
@@ -45,6 +44,7 @@ public class APIController {
     /**
      * Get mapping for endpoint stocktweet
      * @param symbol Company stock symbol
+     * @param acceptHeader Value for accept header
      * @return Json file with stock data and corresponding tweets
      */
     @GetMapping("/stocktweet/{symbol}")
