@@ -331,7 +331,7 @@ socket.addEventListener('message', function (event) {
         } else {
             $(`#${lastPrice['symbol']}`).css("background-color", "red")
         }
-        $(`#${lastPrice['symbol']}price`).html(`$${lastPrice['lastprice']}`)
+        $(`#${lastPrice['symbol']}price`).html(`${lastPrice['lastprice']}`)
     }
 
 });
